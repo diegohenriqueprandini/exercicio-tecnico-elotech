@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class PessoaRepositoryMemory implements PessoaRepository {
 
-    private final List<Pessoa.PessoaData> data = new ArrayList<>();
+    private final List<Pessoa.Data> data = new ArrayList<>();
 
     @Override
     public void add(Pessoa pessoa) {
@@ -19,10 +19,10 @@ public class PessoaRepositoryMemory implements PessoaRepository {
 
     @Override
     public Pessoa getOne(UUID id) {
-        Pessoa.PessoaData pessoaData = data.stream()
+        Pessoa.Data data = this.data.stream()
                 .filter(item -> item.id().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new PessoaNotFoundException(id));
-        return Pessoa.fromData(pessoaData);
+        return Pessoa.fromData(data);
     }
 }
