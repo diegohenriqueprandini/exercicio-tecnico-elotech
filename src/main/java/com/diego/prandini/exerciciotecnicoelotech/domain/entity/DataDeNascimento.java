@@ -1,9 +1,11 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
 import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
+@EqualsAndHashCode
 public class DataDeNascimento {
 
     private final LocalDate value;

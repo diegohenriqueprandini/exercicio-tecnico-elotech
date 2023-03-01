@@ -18,10 +18,10 @@ import java.time.Month;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-class PessoaServiceTest {
+class PessoaServiceInMemoryTest {
 
-    public static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
-    public static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
+    private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
+    private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
     private PessoaService pessoaService;
 
