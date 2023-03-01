@@ -1,9 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.application;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaCpfEmptyException;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaCpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.CpfInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaDataDeNascimentoFuturaException;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaNomeEmptyException;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClockMock;
@@ -50,7 +50,8 @@ class PessoaServiceTest {
             this.pessoaService.criar(pessoaSemNome);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaNomeEmptyException.class);
+        assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Nome da pessoa não pode ser vazio");
     }
 
     @Test
@@ -60,7 +61,8 @@ class PessoaServiceTest {
             this.pessoaService.criar(pessoaSemNome);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaNomeEmptyException.class);
+        assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Nome da pessoa não pode ser vazio");
     }
 
     @Test
@@ -70,7 +72,8 @@ class PessoaServiceTest {
             this.pessoaService.criar(pessoaSemCpf);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaCpfEmptyException.class);
+        assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Cpf da pessoa não pode ser vazio");
     }
 
     @Test
@@ -80,7 +83,8 @@ class PessoaServiceTest {
             this.pessoaService.criar(pessoaSemCpf);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaCpfEmptyException.class);
+        assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Cpf da pessoa não pode ser vazio");
     }
 
     @Test
@@ -91,7 +95,7 @@ class PessoaServiceTest {
         });
 
         assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
-        assertThat(throwable.getMessage()).isEqualTo("CPF invalid: 37785134669");
+        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: 37785134669");
     }
 
     @Test
@@ -114,7 +118,7 @@ class PessoaServiceTest {
         });
 
         assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoFuturaException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Data de Nascimento cannot be future: " + DateUtils.toString(dataDeNascimento));
+        assertThat(throwable.getMessage()).isEqualTo("Data de Nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
     }
 
     @Test

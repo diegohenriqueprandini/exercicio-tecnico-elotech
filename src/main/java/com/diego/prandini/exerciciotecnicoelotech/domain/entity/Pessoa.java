@@ -14,30 +14,41 @@ public class Pessoa {
     private final UUID id;
     private String nome;
     private Cpf cpf;
-    private LocalDate dataDeNascimento;
+    private DataDeNascimento dataDeNascimento;
 
     public static Pessoa fromData(Data data) {
+        Cpf cpf = new Cpf(data.cpf);
+        DataDeNascimento dataDeNascimento = new DataDeNascimento(data.dataDeNascimento);
         return new Pessoa(
                 data.id,
                 data.nome,
-                data.cpf,
-                data.dataDeNascimento
+                cpf,
+                dataDeNascimento
         );
     }
 
     private Pessoa(Builder builder) {
-        this(
-                builder.id,
-                builder.nome,
-                builder.cpf,
-                builder.dataDeNascimento
-        );
+        if (StringUtils.isBlank(builder.nome))
+            throw new PessoaNomeVazioException();
+
+        if (StringUtils.isBlank(builder.cpf))
+            throw new PessoaCpfVazioException();
+
+        Cpf cpf = new Cpf(builder.cpf);
+        DataDeNascimento dataDeNascimento = new DataDeNascimento(builder.dataDeNascimento);
+        if (dataDeNascimento.isFutura(builder.applicationClock))
+            throw new PessoaDataDeNascimentoFuturaException(builder.dataDeNascimento);
+
+        this.id = builder.id;
+        this.nome = builder.nome;
+        this.cpf = cpf;
+        this.dataDeNascimento = dataDeNascimento;
     }
 
-    private Pessoa(UUID id, String nome, String cpf, LocalDate dataDeNascimento) {
+    private Pessoa(UUID id, String nome, Cpf cpf, DataDeNascimento dataDeNascimento) {
         this.id = id;
         this.nome = nome;
-        this.cpf = new Cpf(cpf);
+        this.cpf = cpf;
         this.dataDeNascimento = dataDeNascimento;
     }
 
@@ -46,7 +57,7 @@ public class Pessoa {
                 this.id,
                 this.nome,
                 this.cpf.toString(),
-                this.dataDeNascimento
+                this.dataDeNascimento.getDate()
         );
     }
 
@@ -89,17 +100,7 @@ public class Pessoa {
         }
 
         public Pessoa build() {
-            if (StringUtils.isBlank(nome))
-                throw new PessoaNomeEmptyException();
-
-            if (StringUtils.isBlank(cpf))
-                throw new PessoaCpfEmptyException();
-
-            if (dataDeNascimento.isAfter(applicationClock.today()))
-                throw new PessoaDataDeNascimentoFuturaException(dataDeNascimento);
-
             return new Pessoa(this);
         }
-
     }
 }

@@ -20,7 +20,8 @@ public class PessoaService {
                 .id(id)
                 .nome(input.nome)
                 .cpf(input.cpf)
-                .dataDeNascimento(input.dataDeNascimento).build();
+                .dataDeNascimento(input.dataDeNascimento)
+                .build();
         pessoaRepository.add(pessoa);
         Pessoa pessoaSaved = pessoaRepository.getOne(id);
         return toOutput(pessoaSaved);
@@ -31,7 +32,7 @@ public class PessoaService {
                 pessoa.getId(),
                 pessoa.getNome(),
                 pessoa.getCpf().toString(),
-                pessoa.getDataDeNascimento()
+                pessoa.getDataDeNascimento().getDate()
         );
     }
 
