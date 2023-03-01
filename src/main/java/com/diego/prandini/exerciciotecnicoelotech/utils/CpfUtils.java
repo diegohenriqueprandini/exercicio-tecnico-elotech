@@ -6,7 +6,7 @@ import java.util.List;
 import static com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils.isBlank;
 import static com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils.trimToEmpty;
 
-public class CpfValidador {
+public class CpfUtils {
 
     private static final List<String> CPF_INVALIDO = new ArrayList<>();
 

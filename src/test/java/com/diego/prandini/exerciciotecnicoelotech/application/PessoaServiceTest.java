@@ -1,7 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.application;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaCpfEmptyException;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaCpfInvalidoException;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.CpfInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaDataDeNascimentoFuturaException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaNomeEmptyException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
@@ -90,7 +90,7 @@ class PessoaServiceTest {
             this.pessoaService.criar(pessoaSemCpf);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaCpfInvalidoException.class);
+        assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
         assertThat(throwable.getMessage()).isEqualTo("CPF invalid: 37785134669");
     }
 

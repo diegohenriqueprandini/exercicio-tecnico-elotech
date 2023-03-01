@@ -30,14 +30,23 @@ public class PessoaService {
         return new Output(
                 pessoa.getId(),
                 pessoa.getNome(),
-                pessoa.getCpf(),
+                pessoa.getCpf().toString(),
                 pessoa.getDataDeNascimento()
         );
     }
 
-    public record Input(String nome, String cpf, LocalDate dataDeNascimento) {
+    public record Input(
+            String nome,
+            String cpf,
+            LocalDate dataDeNascimento
+    ) {
     }
 
-    public record Output(UUID id, String nome, String cpf, LocalDate dataDeNascimento) {
+    public record Output(
+            UUID id,
+            String nome,
+            String cpf,
+            LocalDate dataDeNascimento
+    ) {
     }
 }
