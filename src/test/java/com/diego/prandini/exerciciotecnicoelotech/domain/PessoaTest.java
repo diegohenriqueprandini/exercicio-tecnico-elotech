@@ -1,5 +1,8 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.domain;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
 import org.junit.jupiter.api.Test;

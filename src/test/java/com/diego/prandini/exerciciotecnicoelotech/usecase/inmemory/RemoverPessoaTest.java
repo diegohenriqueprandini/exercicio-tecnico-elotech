@@ -1,5 +1,6 @@
-package com.diego.prandini.exerciciotecnicoelotech.application;
+package com.diego.prandini.exerciciotecnicoelotech.usecase.inmemory;
 
+import com.diego.prandini.exerciciotecnicoelotech.application.RemoverPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class RemoverPessoaInMemoryTest {
+public class RemoverPessoaTest {
 
     private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
