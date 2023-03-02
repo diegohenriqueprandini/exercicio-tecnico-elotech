@@ -25,3 +25,6 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 
 * Implementar o front-end para consumir a API.Desejável que seja em ReactJS ou Angular
 * Publicar a aplicação na internet utilizando algum provedor, para que possa ser acessado sem necessidade de rodar o projeto local
+
+### VM Args
+* -Dspring.profiles.active=prod -> (dev, prod)

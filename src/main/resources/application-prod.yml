@@ -1,0 +1,32 @@
+server:
+  error:
+    include-stacktrace: never
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    show-sql: false
+    hibernate:
+      format_sql: false
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always

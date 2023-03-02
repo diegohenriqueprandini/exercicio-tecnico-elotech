@@ -4,10 +4,12 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Component
 @RequiredArgsConstructor
 public class AlterarPessoa {
 

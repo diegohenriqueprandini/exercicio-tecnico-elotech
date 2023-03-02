@@ -3,12 +3,14 @@ package com.diego.prandini.exerciciotecnicoelotech.infra.repository;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public class PessoaRepositoryMemory implements PessoaRepository {
 
     private final List<Pessoa.Data> data = new ArrayList<>();
