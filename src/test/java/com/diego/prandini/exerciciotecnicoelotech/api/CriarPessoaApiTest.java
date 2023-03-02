@@ -1,5 +1,6 @@
-package com.diego.prandini.exerciciotecnicoelotech.controller;
+package com.diego.prandini.exerciciotecnicoelotech.api;
 
+import com.diego.prandini.exerciciotecnicoelotech.api.support.MockMvcHandler;
 import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -19,13 +20,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class PessoaControllerTest {
+public class CriarPessoaApiTest {
 
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
@@ -49,13 +51,15 @@ public class PessoaControllerTest {
         MockMvcHandler<CriarPessoa.Output> handler = new MockMvcHandler<>(new TypeReference<>() {
         });
         String input = JsonUtils.toJson(new CriarPessoa.Input(
-                NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT
         ));
-        mockMvc.perform(post("/pessoas").contentType(MediaType.APPLICATION_JSON)
-                        .content(input))
+        mockMvc.perform(post("/pessoas").contentType(MediaType.APPLICATION_JSON).content(input))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(redirectedUrlPattern("/pessoas/*"))
                 .andDo(handler);
         return handler.get();
     }

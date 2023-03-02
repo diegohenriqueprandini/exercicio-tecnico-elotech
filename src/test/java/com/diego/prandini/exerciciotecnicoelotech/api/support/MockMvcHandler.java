@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.controller;
+package com.diego.prandini.exerciciotecnicoelotech.api.support;
 
 import com.diego.prandini.exerciciotecnicoelotech.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
