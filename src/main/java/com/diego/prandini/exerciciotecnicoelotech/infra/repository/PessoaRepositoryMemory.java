@@ -1,11 +1,12 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PessoaRepositoryMemory implements PessoaRepository {
@@ -13,7 +14,15 @@ public class PessoaRepositoryMemory implements PessoaRepository {
     private final List<Pessoa.Data> data = new ArrayList<>();
 
     @Override
-    public void add(Pessoa pessoa) {
+    public void save(Pessoa pessoa) {
+        Optional<Pessoa.Data> found = this.data.stream()
+                .filter(item -> item.id().equals(pessoa.getId()))
+                .findFirst();
+        if (found.isPresent()) {
+            data.remove(found.get());
+            data.add(pessoa.toData());
+            return;
+        }
         data.add(pessoa.toData());
     }
 

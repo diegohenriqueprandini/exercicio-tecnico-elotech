@@ -5,7 +5,8 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import java.util.UUID;
 
 public interface PessoaRepository {
-    void add(Pessoa pessoa);
+
+    void save(Pessoa pessoa);
 
     Pessoa getOne(UUID id);
 }

@@ -30,24 +30,6 @@ public class Pessoa {
         );
     }
 
-    private Pessoa(Builder builder) {
-        if (StringUtils.isBlank(builder.nome))
-            throw new PessoaNomeVazioException();
-
-        if (StringUtils.isBlank(builder.cpf))
-            throw new PessoaCpfVazioException();
-
-        Cpf cpf = new Cpf(builder.cpf);
-        DataDeNascimento dataDeNascimento = new DataDeNascimento(builder.dataDeNascimento);
-        if (dataDeNascimento.isFutura(builder.applicationClock))
-            throw new PessoaDataDeNascimentoFuturaException(builder.dataDeNascimento);
-
-        this.id = builder.id;
-        this.nome = builder.nome;
-        this.cpf = cpf;
-        this.dataDeNascimento = dataDeNascimento;
-    }
-
     private Pessoa(UUID id, String nome, Cpf cpf, DataDeNascimento dataDeNascimento) {
         this.id = id;
         this.nome = nome;
@@ -73,7 +55,7 @@ public class Pessoa {
     }
 
     @RequiredArgsConstructor
-    public static class Builder {
+    public static class CriarBuilder {
 
         private final ApplicationClock applicationClock;
 
@@ -82,28 +64,88 @@ public class Pessoa {
         private String cpf;
         private LocalDate dataDeNascimento;
 
-        public Builder id(UUID id) {
+        public CriarBuilder id(UUID id) {
             this.id = id;
             return this;
         }
 
-        public Builder nome(String nome) {
+        public CriarBuilder nome(String nome) {
             this.nome = nome;
             return this;
         }
 
-        public Builder cpf(String cpf) {
+        public CriarBuilder cpf(String cpf) {
             this.cpf = cpf;
             return this;
         }
 
-        public Builder dataDeNascimento(LocalDate dataDeNascimento) {
+        public CriarBuilder dataDeNascimento(LocalDate dataDeNascimento) {
             this.dataDeNascimento = dataDeNascimento;
             return this;
         }
 
         public Pessoa build() {
-            return new Pessoa(this);
+            if (StringUtils.isBlank(this.nome))
+                throw new PessoaNomeVazioException();
+
+            if (StringUtils.isBlank(this.cpf))
+                throw new PessoaCpfVazioException();
+
+            Cpf cpf = new Cpf(this.cpf);
+            DataDeNascimento dataDeNascimento = new DataDeNascimento(this.dataDeNascimento);
+            if (dataDeNascimento.isFutura(this.applicationClock))
+                throw new PessoaDataDeNascimentoFuturaException(this.dataDeNascimento);
+
+            return new Pessoa(
+                    id,
+                    this.nome,
+                    cpf,
+                    dataDeNascimento
+            );
+        }
+    }
+
+    @RequiredArgsConstructor
+    public static class AlterarBuilder {
+
+        private final ApplicationClock applicationClock;
+        private final Pessoa pessoa;
+
+        private String nome;
+        private String cpf;
+        private LocalDate dataDeNascimento;
+
+        public AlterarBuilder nome(String nome) {
+            this.nome = nome;
+            return this;
+        }
+
+        public AlterarBuilder cpf(String cpf) {
+            this.cpf = cpf;
+            return this;
+        }
+
+        public AlterarBuilder dataDeNascimento(LocalDate dataDeNascimento) {
+            this.dataDeNascimento = dataDeNascimento;
+            return this;
+        }
+
+        public Pessoa build() {
+            if (StringUtils.isBlank(this.nome))
+                throw new PessoaNomeVazioException();
+
+            if (StringUtils.isBlank(this.cpf))
+                throw new PessoaCpfVazioException();
+
+            Cpf cpf = new Cpf(this.cpf);
+            DataDeNascimento dataDeNascimento = new DataDeNascimento(this.dataDeNascimento);
+            if (dataDeNascimento.isFutura(this.applicationClock))
+                throw new PessoaDataDeNascimentoFuturaException(this.dataDeNascimento);
+
+            this.pessoa.setNome(this.nome);
+            this.pessoa.setCpf(cpf);
+            this.pessoa.setDataDeNascimento(dataDeNascimento);
+            return pessoa;
         }
     }
 }

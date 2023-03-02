@@ -9,22 +9,21 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class CriarPessoa {
+public class AlterarPessoa {
 
     private final PessoaRepository pessoaRepository;
-    private final ApplicationClock clock;
+    private final ApplicationClock applicationClock;
 
-    public Output execute(Input input) {
-        UUID id = UUID.randomUUID();
-        Pessoa pessoa = new Pessoa.CriarBuilder(clock)
-                .id(id)
+    public Output execute(UUID id, Input input) {
+        Pessoa pessoa = pessoaRepository.getOne(id);
+        Pessoa updated = new Pessoa.AlterarBuilder(applicationClock, pessoa)
                 .nome(input.nome)
                 .cpf(input.cpf)
                 .dataDeNascimento(input.dataDeNascimento)
                 .build();
-        pessoaRepository.save(pessoa);
-        Pessoa pessoaSaved = pessoaRepository.getOne(id);
-        return toOutput(pessoaSaved);
+        pessoaRepository.save(updated);
+        Pessoa saved = pessoaRepository.getOne(id);
+        return toOutput(saved);
     }
 
     private Output toOutput(Pessoa pessoa) {

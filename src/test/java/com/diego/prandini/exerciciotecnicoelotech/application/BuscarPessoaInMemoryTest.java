@@ -17,11 +17,11 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class BuscarPessoaInMemoryTest {
 
-    private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
     private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
+    private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
 
     @Test
     void deveBuscarUmaPessoaPeloId() {
@@ -29,7 +29,7 @@ public class BuscarPessoaInMemoryTest {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
 
         UUID id = UUID.randomUUID();
-        pessoaRepository.add(new Pessoa.Builder(applicationClock)
+        pessoaRepository.save(new Pessoa.CriarBuilder(applicationClock)
                 .id(id)
                 .nome(NOME_DEFAULT)
                 .cpf(CPF_DEFAULT)
