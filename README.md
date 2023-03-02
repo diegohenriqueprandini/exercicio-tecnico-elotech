@@ -30,7 +30,6 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 * -Dspring.profiles.active=prod -> (dev, prod)
 
 ### Itens Pendendes
-* Testes de api
 * A pessoa deve possuir uma lista de contatos (relacionamento um para muitos) com os campos: Id, Nome, Telefone e Email.
 * Todos os campos são obrigatórios, tanto da pessoa como do contato
 * A Pessoa deve possuir ao menos um contato

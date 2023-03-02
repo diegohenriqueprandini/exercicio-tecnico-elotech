@@ -51,7 +51,7 @@ public class AlterarPessoaApiTest {
     private ApplicationClock applicationClock;
 
     @Test
-    void deveAltearPessoa() throws Exception {
+    void deveAlterarPessoa() throws Exception {
         pessoaRepository.save(Pessoa.of(
                 ID_DEFAULT,
                 OLD_NOME_DEFAULT,
