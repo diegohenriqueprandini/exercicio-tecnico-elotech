@@ -1,0 +1,23 @@
+server:
+  error:
+    include-stacktrace: on_param
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    show-sql: true
+    hibernate:
+      format_sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+logging:
+  level:
+    root: INFO

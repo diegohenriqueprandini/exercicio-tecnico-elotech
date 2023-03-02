@@ -14,16 +14,17 @@ import java.util.UUID;
 public class CriarPessoa {
 
     private final PessoaRepository pessoaRepository;
-    private final ApplicationClock clock;
+    private final ApplicationClock applicationClock;
 
     public Output execute(Input input) {
         UUID id = UUID.randomUUID();
-        Pessoa pessoa = new Pessoa.CriarBuilder(clock)
-                .id(id)
-                .nome(input.nome)
-                .cpf(input.cpf)
-                .dataDeNascimento(input.dataDeNascimento)
-                .build();
+        Pessoa pessoa = Pessoa.of(
+                id,
+                input.nome,
+                input.cpf,
+                input.dataDeNascimento,
+                applicationClock
+        );
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.getOne(id);
         return toOutput(pessoaSaved);

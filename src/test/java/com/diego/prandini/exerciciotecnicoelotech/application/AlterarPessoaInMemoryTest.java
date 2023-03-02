@@ -5,6 +5,7 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaReposi
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoVaziaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
@@ -37,21 +38,25 @@ public class AlterarPessoaInMemoryTest {
 
     @BeforeEach
     void setup() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        pessoaRepository.save(new Pessoa.CriarBuilder(applicationClock)
-                .id(ID_DEFAULT)
-                .nome(OLD_NOME_DEFAULT)
-                .cpf(OLD_CPF_DEFAULT)
-                .dataDeNascimento(OLD_DATA_DE_NASCIMENTO_DEFAULT)
-                .build()
-        );
+        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+        pessoaRepository.save(Pessoa.of(
+                ID_DEFAULT,
+                OLD_NOME_DEFAULT,
+                OLD_CPF_DEFAULT,
+                OLD_DATA_DE_NASCIMENTO_DEFAULT,
+                applicationClock
+        ));
         alterarPessoa = new AlterarPessoa(pessoaRepository, applicationClock);
     }
 
     @Test
     void deveAlterarNomeCpfEDataDeNascimentoPeloId() {
-        AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, NOVO_CPF_DEFAULT, NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+        AlterarPessoa.Input input = new AlterarPessoa.Input(
+                NOVO_NOME_DEFAULT,
+                NOVO_CPF_DEFAULT,
+                NOVO_DATA_DE_NASCIMENTO_DEFAULT
+        );
         AlterarPessoa.Output output = alterarPessoa.execute(ID_DEFAULT, input);
 
         assertThat(output).isNotNull();
@@ -64,7 +69,11 @@ public class AlterarPessoaInMemoryTest {
     @Test
     void nomeNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(null, NOVO_CPF_DEFAULT, NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    null,
+                    NOVO_CPF_DEFAULT,
+                    NOVO_DATA_DE_NASCIMENTO_DEFAULT
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
@@ -75,7 +84,11 @@ public class AlterarPessoaInMemoryTest {
     @Test
     void nomeComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(" ", NOVO_CPF_DEFAULT, NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    " ",
+                    NOVO_CPF_DEFAULT,
+                    NOVO_DATA_DE_NASCIMENTO_DEFAULT
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
@@ -86,7 +99,11 @@ public class AlterarPessoaInMemoryTest {
     @Test
     void cpfNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, null, NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    NOVO_NOME_DEFAULT,
+                    null,
+                    NOVO_DATA_DE_NASCIMENTO_DEFAULT
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
@@ -97,7 +114,11 @@ public class AlterarPessoaInMemoryTest {
     @Test
     void cpfComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, " ", NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    NOVO_NOME_DEFAULT,
+                    " ",
+                    NOVO_DATA_DE_NASCIMENTO_DEFAULT
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
@@ -108,7 +129,11 @@ public class AlterarPessoaInMemoryTest {
     @Test
     void cpfDeveSerValido() {
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, "25853765222", NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    NOVO_NOME_DEFAULT,
+                    "25853765222",
+                    NOVO_DATA_DE_NASCIMENTO_DEFAULT
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
@@ -118,7 +143,11 @@ public class AlterarPessoaInMemoryTest {
 
     @Test
     void pessoaPodeSerCriadaComCpfFormatado() {
-        AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, "258.534.602-18", NOVO_DATA_DE_NASCIMENTO_DEFAULT);
+        AlterarPessoa.Input input = new AlterarPessoa.Input(
+                NOVO_NOME_DEFAULT,
+                "258.534.602-18",
+                NOVO_DATA_DE_NASCIMENTO_DEFAULT
+        );
         AlterarPessoa.Output output = alterarPessoa.execute(ID_DEFAULT, input);
 
         assertThat(output).isNotNull();
@@ -129,21 +158,44 @@ public class AlterarPessoaInMemoryTest {
     }
 
     @Test
+    void dataDeNascimentoNaoPodeSerNula() {
+        Throwable throwable = catchThrowable(() -> {
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    NOVO_NOME_DEFAULT,
+                    NOVO_CPF_DEFAULT,
+                    null
+            );
+            alterarPessoa.execute(ID_DEFAULT, input);
+        });
+
+        assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoVaziaException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Data de nascimento da pessoa não pode ser vazia");
+    }
+
+    @Test
     void dataDeNascimentoNaoPodeSerFutura() {
         LocalDate dataDeNascimento = TODAY_MOCK.plusDays(1);
         Throwable throwable = catchThrowable(() -> {
-            AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, NOVO_CPF_DEFAULT, dataDeNascimento);
+            AlterarPessoa.Input input = new AlterarPessoa.Input(
+                    NOVO_NOME_DEFAULT,
+                    NOVO_CPF_DEFAULT,
+                    dataDeNascimento
+            );
             alterarPessoa.execute(ID_DEFAULT, input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoFuturaException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Data de Nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
+        assertThat(throwable.getMessage()).isEqualTo("Data de nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
     }
 
     @Test
     void dataDeNascimentoPodeSerHoje() {
         LocalDate dataDeNascimento = TODAY_MOCK;
-        AlterarPessoa.Input input = new AlterarPessoa.Input(NOVO_NOME_DEFAULT, NOVO_CPF_DEFAULT, dataDeNascimento);
+        AlterarPessoa.Input input = new AlterarPessoa.Input(
+                NOVO_NOME_DEFAULT,
+                NOVO_CPF_DEFAULT,
+                dataDeNascimento
+        );
         AlterarPessoa.Output output = alterarPessoa.execute(ID_DEFAULT, input);
 
         assertThat(output).isNotNull();

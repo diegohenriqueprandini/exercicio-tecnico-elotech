@@ -7,6 +7,6 @@ import java.time.LocalDate;
 public class PessoaDataDeNascimentoFuturaException extends RuntimeException {
 
     public PessoaDataDeNascimentoFuturaException(LocalDate dataDeNascimento) {
-        super("Data de Nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
+        super("Data de nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
     }
 }

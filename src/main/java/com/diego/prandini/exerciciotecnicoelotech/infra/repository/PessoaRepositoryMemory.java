@@ -13,34 +13,33 @@ import java.util.UUID;
 @Repository
 public class PessoaRepositoryMemory implements PessoaRepository {
 
-    private final List<Pessoa.Data> data = new ArrayList<>();
+    private final List<Pessoa> data = new ArrayList<>();
 
     @Override
     public void save(Pessoa pessoa) {
-        Optional<Pessoa.Data> found = this.data.stream()
-                .filter(item -> item.id().equals(pessoa.getId()))
+        Optional<Pessoa> found = this.data.stream()
+                .filter(item -> item.getId().equals(pessoa.getId()))
                 .findFirst();
         if (found.isPresent()) {
             data.remove(found.get());
-            data.add(pessoa.toData());
+            data.add(pessoa);
             return;
         }
-        data.add(pessoa.toData());
+        data.add(pessoa);
     }
 
     @Override
     public Pessoa getOne(UUID id) {
-        Pessoa.Data data = this.data.stream()
-                .filter(item -> item.id().equals(id))
+        return this.data.stream()
+                .filter(item -> item.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new PessoaNotFoundException(id));
-        return Pessoa.fromData(data);
     }
 
     @Override
     public void remove(Pessoa pessoa) {
         this.data.stream()
-                .filter(item -> item.id().equals(pessoa.getId()))
+                .filter(item -> item.getId().equals(pessoa.getId()))
                 .findFirst()
                 .ifPresent(this.data::remove);
     }

@@ -25,17 +25,17 @@ public class BuscarPessoaInMemoryTest {
 
     @Test
     void deveBuscarUmaPessoaPeloId() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
+        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
 
         UUID id = UUID.randomUUID();
-        pessoaRepository.save(new Pessoa.CriarBuilder(applicationClock)
-                .id(id)
-                .nome(NOME_DEFAULT)
-                .cpf(CPF_DEFAULT)
-                .dataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT)
-                .build()
-        );
+        pessoaRepository.save(Pessoa.of(
+                id,
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                applicationClock
+        ));
 
         BuscarPessoa buscarPessoa = new BuscarPessoa(pessoaRepository);
         BuscarPessoa.Output output = buscarPessoa.execute(id);

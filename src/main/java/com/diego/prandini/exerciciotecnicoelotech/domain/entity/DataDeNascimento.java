@@ -3,9 +3,11 @@ package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
+@ToString
 @EqualsAndHashCode
 public class DataDeNascimento {
 

@@ -18,12 +18,10 @@ public class AlterarPessoa {
 
     public Output execute(UUID id, Input input) {
         Pessoa pessoa = pessoaRepository.getOne(id);
-        Pessoa updated = new Pessoa.AlterarBuilder(applicationClock, pessoa)
-                .nome(input.nome)
-                .cpf(input.cpf)
-                .dataDeNascimento(input.dataDeNascimento)
-                .build();
-        pessoaRepository.save(updated);
+        pessoa.setNome(input.nome);
+        pessoa.setCpf(input.cpf);
+        pessoa.setDataDeNascimento(input.dataDeNascimento, applicationClock);
+        pessoaRepository.save(pessoa);
         Pessoa saved = pessoaRepository.getOne(id);
         return toOutput(saved);
     }
