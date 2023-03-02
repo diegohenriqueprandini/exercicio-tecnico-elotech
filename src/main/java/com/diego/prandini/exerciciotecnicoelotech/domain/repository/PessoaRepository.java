@@ -9,4 +9,6 @@ public interface PessoaRepository {
     void save(Pessoa pessoa);
 
     Pessoa getOne(UUID id);
+
+    void remove(Pessoa pessoa);
 }

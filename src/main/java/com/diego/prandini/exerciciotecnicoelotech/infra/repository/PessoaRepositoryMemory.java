@@ -34,4 +34,12 @@ public class PessoaRepositoryMemory implements PessoaRepository {
                 .orElseThrow(() -> new PessoaNotFoundException(id));
         return Pessoa.fromData(data);
     }
+
+    @Override
+    public void remove(Pessoa pessoa) {
+        this.data.stream()
+                .filter(item -> item.id().equals(pessoa.getId()))
+                .findFirst()
+                .ifPresent(this.data::remove);
+    }
 }
