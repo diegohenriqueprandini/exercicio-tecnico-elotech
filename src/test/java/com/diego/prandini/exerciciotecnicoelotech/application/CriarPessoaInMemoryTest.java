@@ -37,7 +37,8 @@ class CriarPessoaInMemoryTest {
 
     @Test
     void deveCriarUmaPessoaComNomeCpfEDataDeNascimento() {
-        CriarPessoa.Output output = criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
+        CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
+        CriarPessoa.Output output = criarPessoa.execute(input);
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
@@ -49,8 +50,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void nomeNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemNome = new CriarPessoa.Input(null, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
-            criarPessoa.execute(pessoaSemNome);
+            CriarPessoa.Input input = new CriarPessoa.Input(null, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
@@ -60,8 +61,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void nomeComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemNome = new CriarPessoa.Input(" ", CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
-            criarPessoa.execute(pessoaSemNome);
+            CriarPessoa.Input input = new CriarPessoa.Input(" ", CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
@@ -71,8 +72,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void cpfNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, null, DATA_DE_NASCIMENTO_DEFAULT);
-            criarPessoa.execute(pessoaSemCpf);
+            CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, null, DATA_DE_NASCIMENTO_DEFAULT);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
@@ -82,8 +83,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void cpfComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, " ", DATA_DE_NASCIMENTO_DEFAULT);
-            criarPessoa.execute(pessoaSemCpf);
+            CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, " ", DATA_DE_NASCIMENTO_DEFAULT);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
@@ -93,8 +94,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void cpfDeveSerValido() {
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, "37785134669", DATA_DE_NASCIMENTO_DEFAULT);
-            criarPessoa.execute(pessoaSemCpf);
+            CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, "37785134669", DATA_DE_NASCIMENTO_DEFAULT);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
@@ -103,7 +104,8 @@ class CriarPessoaInMemoryTest {
 
     @Test
     void pessoaPodeSerCriadaComCpfFormatado() {
-        CriarPessoa.Output output = criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, "377.831.326-69", DATA_DE_NASCIMENTO_DEFAULT));
+        CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, "377.831.326-69", DATA_DE_NASCIMENTO_DEFAULT);
+        CriarPessoa.Output output = criarPessoa.execute(input);
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
@@ -116,8 +118,8 @@ class CriarPessoaInMemoryTest {
     void dataDeNascimentoNaoPodeSerFutura() {
         LocalDate dataDeNascimento = TODAY_MOCK.plusDays(1);
         Throwable throwable = catchThrowable(() -> {
-            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, dataDeNascimento);
-            criarPessoa.execute(pessoaSemCpf);
+            CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, dataDeNascimento);
+            criarPessoa.execute(input);
         });
 
         assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoFuturaException.class);
@@ -127,7 +129,8 @@ class CriarPessoaInMemoryTest {
     @Test
     void dataDeNascimentoPodeSerHoje() {
         LocalDate dataDeNascimento = TODAY_MOCK;
-        CriarPessoa.Output output = criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, dataDeNascimento));
+        CriarPessoa.Input input = new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, dataDeNascimento);
+        CriarPessoa.Output output = criarPessoa.execute(input);
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
