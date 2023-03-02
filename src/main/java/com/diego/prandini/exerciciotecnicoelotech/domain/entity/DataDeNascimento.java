@@ -1,6 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;

@@ -1,6 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

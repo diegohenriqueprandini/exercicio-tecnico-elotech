@@ -1,5 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.utils.CpfUtils;
 import lombok.EqualsAndHashCode;
 

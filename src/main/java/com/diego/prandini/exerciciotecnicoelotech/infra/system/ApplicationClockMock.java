@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.infra;
+package com.diego.prandini.exerciciotecnicoelotech.infra.system;
 
 import lombok.RequiredArgsConstructor;
 

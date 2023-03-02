@@ -1,13 +1,13 @@
 package com.diego.prandini.exerciciotecnicoelotech.application;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaCpfVazioException;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.CpfInvalidoException;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaDataDeNascimentoFuturaException;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClockMock;
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,36 +18,39 @@ import java.time.Month;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-class PessoaServiceInMemoryTest {
+class CriarPessoaInMemoryTest {
 
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
     private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
-    private PessoaService pessoaService;
+    private static final String NOME_DEFAULT = "Joao";
+    private static final String CPF_DEFAULT = "37783132669";
+
+    private CriarPessoa criarPessoa;
 
     @BeforeEach
     void setup() {
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        this.pessoaService = new PessoaService(pessoaRepository, applicationClock);
+        this.criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
     }
 
     @Test
     void deveCriarUmaPessoaComNomeCpfEDataDeNascimento() {
-        PessoaService.Output output = this.pessoaService.criar(new PessoaService.Input("Joao", "37783132669", DATA_DE_NASCIMENTO_DEFAULT));
+        CriarPessoa.Output output = this.criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
-        assertThat(output.nome()).isEqualTo("Joao");
-        assertThat(output.cpf()).isEqualTo("37783132669");
+        assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
         assertThat(output.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 
     @Test
     void nomeNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemNome = new PessoaService.Input(null, "37783132669", DATA_DE_NASCIMENTO_DEFAULT);
-            this.pessoaService.criar(pessoaSemNome);
+            CriarPessoa.Input pessoaSemNome = new CriarPessoa.Input(null, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
+            this.criarPessoa.execute(pessoaSemNome);
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
@@ -57,8 +60,8 @@ class PessoaServiceInMemoryTest {
     @Test
     void nomeComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemNome = new PessoaService.Input(" ", "37783132669", DATA_DE_NASCIMENTO_DEFAULT);
-            this.pessoaService.criar(pessoaSemNome);
+            CriarPessoa.Input pessoaSemNome = new CriarPessoa.Input(" ", CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT);
+            this.criarPessoa.execute(pessoaSemNome);
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
@@ -68,8 +71,8 @@ class PessoaServiceInMemoryTest {
     @Test
     void cpfNuloNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemCpf = new PessoaService.Input("Joao", null, DATA_DE_NASCIMENTO_DEFAULT);
-            this.pessoaService.criar(pessoaSemCpf);
+            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, null, DATA_DE_NASCIMENTO_DEFAULT);
+            this.criarPessoa.execute(pessoaSemCpf);
         });
 
         assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
@@ -79,8 +82,8 @@ class PessoaServiceInMemoryTest {
     @Test
     void cpfComApenasEspacosNaoPermitido() {
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemCpf = new PessoaService.Input("Joao", " ", DATA_DE_NASCIMENTO_DEFAULT);
-            this.pessoaService.criar(pessoaSemCpf);
+            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, " ", DATA_DE_NASCIMENTO_DEFAULT);
+            this.criarPessoa.execute(pessoaSemCpf);
         });
 
         assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
@@ -90,8 +93,8 @@ class PessoaServiceInMemoryTest {
     @Test
     void cpfDeveSerValido() {
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemCpf = new PessoaService.Input("Joao", "37785134669", DATA_DE_NASCIMENTO_DEFAULT);
-            this.pessoaService.criar(pessoaSemCpf);
+            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, "37785134669", DATA_DE_NASCIMENTO_DEFAULT);
+            this.criarPessoa.execute(pessoaSemCpf);
         });
 
         assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
@@ -100,12 +103,12 @@ class PessoaServiceInMemoryTest {
 
     @Test
     void pessoaPodeSerCriadaComCpfFormatado() {
-        PessoaService.Output output = this.pessoaService.criar(new PessoaService.Input("Joao", "377.831.326-69", DATA_DE_NASCIMENTO_DEFAULT));
+        CriarPessoa.Output output = this.criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, "377.831.326-69", DATA_DE_NASCIMENTO_DEFAULT));
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
-        assertThat(output.nome()).isEqualTo("Joao");
-        assertThat(output.cpf()).isEqualTo("37783132669");
+        assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
         assertThat(output.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 
@@ -113,8 +116,8 @@ class PessoaServiceInMemoryTest {
     void dataDeNascimentoNaoPodeSerFutura() {
         LocalDate dataDeNascimento = TODAY_MOCK.plusDays(1);
         Throwable throwable = catchThrowable(() -> {
-            PessoaService.Input pessoaSemCpf = new PessoaService.Input("Joao", "37783132669", dataDeNascimento);
-            this.pessoaService.criar(pessoaSemCpf);
+            CriarPessoa.Input pessoaSemCpf = new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, dataDeNascimento);
+            this.criarPessoa.execute(pessoaSemCpf);
         });
 
         assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoFuturaException.class);
@@ -124,12 +127,30 @@ class PessoaServiceInMemoryTest {
     @Test
     void setDataDeNascimentoPodeSerHoje() {
         LocalDate dataDeNascimento = TODAY_MOCK;
-        PessoaService.Output output = this.pessoaService.criar(new PessoaService.Input("Joao", "377.831.326-69", dataDeNascimento));
+        CriarPessoa.Output output = this.criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, "377.831.326-69", dataDeNascimento));
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
-        assertThat(output.nome()).isEqualTo("Joao");
-        assertThat(output.cpf()).isEqualTo("37783132669");
+        assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
         assertThat(output.dataDeNascimento()).isEqualTo(dataDeNascimento);
+    }
+
+    @Test
+    void deveCadastrarDuasPessoasIguais() {
+        CriarPessoa.Output output1 = this.criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
+        CriarPessoa.Output output2 = this.criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
+
+        assertThat(output1).isNotNull();
+        assertThat(output1.id()).isNotNull();
+        assertThat(output1.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output1.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(output1.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+
+        assertThat(output2).isNotNull();
+        assertThat(output2.id()).isNotNull();
+        assertThat(output2.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output2.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(output2.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 }

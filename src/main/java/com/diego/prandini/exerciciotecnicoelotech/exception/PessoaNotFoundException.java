@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.repository;
+package com.diego.prandini.exerciciotecnicoelotech.exception;
 
 import java.util.UUID;
 

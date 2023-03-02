@@ -1,7 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaNotFoundException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.exception;
 
 import com.diego.prandini.exerciciotecnicoelotech.utils.DateUtils;
 

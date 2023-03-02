@@ -2,19 +2,19 @@ package com.diego.prandini.exerciciotecnicoelotech.application;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class PessoaService {
+public class CriarPessoa {
 
     private final PessoaRepository pessoaRepository;
     private final ApplicationClock clock;
 
-    public Output criar(Input input) {
+    public Output execute(Input input) {
         UUID id = UUID.randomUUID();
         Pessoa pessoa = new Pessoa.Builder(clock)
                 .id(id)

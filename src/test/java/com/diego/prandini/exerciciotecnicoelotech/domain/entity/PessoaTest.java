@@ -1,7 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClock;
-import com.diego.prandini.exerciciotecnicoelotech.infra.ApplicationClockMock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

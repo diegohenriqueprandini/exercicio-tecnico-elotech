@@ -1,5 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
