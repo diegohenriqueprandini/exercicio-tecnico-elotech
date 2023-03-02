@@ -14,7 +14,7 @@ public class RemoverPessoa {
     private final PessoaRepository pessoaRepository;
 
     public void execure(UUID id) {
-        Pessoa pessoa = pessoaRepository.getOne(id);
+        Pessoa pessoa = pessoaRepository.findById(id);
         pessoaRepository.remove(pessoa);
     }
 }

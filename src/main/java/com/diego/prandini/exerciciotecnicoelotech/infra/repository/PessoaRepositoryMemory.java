@@ -1,5 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
@@ -23,13 +24,15 @@ public class PessoaRepositoryMemory implements PessoaRepository {
         if (found.isPresent()) {
             data.remove(found.get());
             data.add(pessoa);
+            findByCpf(pessoa.getCpf());
             return;
         }
         data.add(pessoa);
+        findByCpf(pessoa.getCpf());
     }
 
     @Override
-    public Pessoa getOne(UUID id) {
+    public Pessoa findById(UUID id) {
         return this.data.stream()
                 .filter(item -> item.getId().equals(id))
                 .findFirst()
@@ -42,5 +45,20 @@ public class PessoaRepositoryMemory implements PessoaRepository {
                 .filter(item -> item.getId().equals(pessoa.getId()))
                 .findFirst()
                 .ifPresent(this.data::remove);
+    }
+
+    @Override
+    public List<Pessoa> findAll() {
+        return List.copyOf(data);
+    }
+
+    @Override
+    public Optional<Pessoa> findByCpf(Cpf cpf) {
+        List<Pessoa> dadoCpf = this.data.stream()
+                .filter(item -> item.getCpf().equals(cpf))
+                .toList();
+        if (dadoCpf.size() > 1)
+            throw new RuntimeException("Cpf inconsistente: " + cpf.get());
+        return dadoCpf.stream().findFirst();
     }
 }

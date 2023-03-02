@@ -28,12 +28,12 @@ public class RemoverPessoaTest {
     void deveRemoverPessoaPeloId() {
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
 
-        UUID id = criarPessoa(pessoaRepository);
+        UUID id = criarPessoa(CPF_DEFAULT, pessoaRepository);
 
         RemoverPessoa removerPessoa = new RemoverPessoa(pessoaRepository);
         removerPessoa.execure(id);
 
-        Throwable throwable = catchThrowable(() -> pessoaRepository.getOne(id));
+        Throwable throwable = catchThrowable(() -> pessoaRepository.findById(id));
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + id);
     }
@@ -52,30 +52,30 @@ public class RemoverPessoaTest {
     }
 
     @Test
-    void deveRemoverAPessoaCertaPeloID() {
+    void deveRemoverAPessoaCertaPeloId() {
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
 
-        UUID idPessoa1 = criarPessoa(pessoaRepository);
-        UUID idPessoa2 = criarPessoa(pessoaRepository);
+        UUID idPessoa1 = criarPessoa("84873547938", pessoaRepository);
+        UUID idPessoa2 = criarPessoa("06040259710", pessoaRepository);
 
         RemoverPessoa removerPessoa = new RemoverPessoa(pessoaRepository);
         removerPessoa.execure(idPessoa2);
 
-        Pessoa pessoa1 = pessoaRepository.getOne(idPessoa1);
+        Pessoa pessoa1 = pessoaRepository.findById(idPessoa1);
         assertThat(pessoa1).isNotNull();
 
-        Throwable throwable = catchThrowable(() -> pessoaRepository.getOne(idPessoa2));
+        Throwable throwable = catchThrowable(() -> pessoaRepository.findById(idPessoa2));
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + idPessoa2);
     }
 
-    private UUID criarPessoa(PessoaRepository pessoaRepository) {
+    private UUID criarPessoa(String cpf, PessoaRepository pessoaRepository) {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         UUID id = UUID.randomUUID();
         pessoaRepository.save(Pessoa.of(
                 id,
                 NOME_DEFAULT,
-                CPF_DEFAULT,
+                cpf,
                 DATA_DE_NASCIMENTO_DEFAULT,
                 applicationClock
         ));

@@ -19,7 +19,7 @@ public class DataDeNascimento {
         this.value = value;
     }
 
-    public LocalDate getDate() {
+    public LocalDate get() {
         return this.value;
     }
 

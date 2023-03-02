@@ -15,7 +15,7 @@ public class BuscarPessoa {
     private final PessoaRepository pessoaRepository;
 
     public Output execute(UUID id) {
-        Pessoa pessoa = pessoaRepository.getOne(id);
+        Pessoa pessoa = pessoaRepository.findById(id);
         return toOutput(pessoa);
     }
 
@@ -23,8 +23,8 @@ public class BuscarPessoa {
         return new Output(
                 pessoa.getId(),
                 pessoa.getNome(),
-                pessoa.getCpf().toString(),
-                pessoa.getDataDeNascimento().getDate()
+                pessoa.getCpf().get(),
+                pessoa.getDataDeNascimento().get()
         );
     }
 

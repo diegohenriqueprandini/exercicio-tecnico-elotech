@@ -20,7 +20,7 @@ class DataDeNascimentoTest {
         DataDeNascimento dataDeNascimento = new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT);
 
         assertThat(dataDeNascimento).isNotNull();
-        assertThat(dataDeNascimento.getDate()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+        assertThat(dataDeNascimento.get()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 
     @Test

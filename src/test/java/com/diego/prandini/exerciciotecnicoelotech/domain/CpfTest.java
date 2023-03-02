@@ -14,7 +14,7 @@ class CpfTest {
         Cpf cpf = new Cpf("47757818800");
 
         assertThat(cpf).isNotNull();
-        assertThat(cpf.toString()).isEqualTo("47757818800");
+        assertThat(cpf.get()).isEqualTo("47757818800");
     }
 
     @Test
@@ -22,7 +22,7 @@ class CpfTest {
         Cpf cpf = new Cpf("477.578.188-00");
 
         assertThat(cpf).isNotNull();
-        assertThat(cpf.toString()).isEqualTo("47757818800");
+        assertThat(cpf.get()).isEqualTo("47757818800");
     }
 
     @Test
@@ -30,6 +30,6 @@ class CpfTest {
         Throwable throwable = catchThrowable(() -> new Cpf("477.578.177-10"));
 
         assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: 477.578.177-10");
+        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: '477.578.177-10'");
     }
 }

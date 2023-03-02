@@ -1,8 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoVaziaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
@@ -59,14 +57,10 @@ public class Pessoa {
     }
 
     public void setCpf(String cpf) {
-        if (StringUtils.isBlank(cpf))
-            throw new PessoaCpfVazioException();
         this.cpf = new Cpf(cpf);
     }
 
     public void setDataDeNascimento(LocalDate dataDeNascimento, ApplicationClock applicationClock) {
-        if (dataDeNascimento == null)
-            throw new PessoaDataDeNascimentoVaziaException();
         DataDeNascimento dataDeNascimentoVo = new DataDeNascimento(dataDeNascimento);
         if (dataDeNascimentoVo.isFutura(applicationClock))
             throw new PessoaDataDeNascimentoFuturaException(dataDeNascimento);

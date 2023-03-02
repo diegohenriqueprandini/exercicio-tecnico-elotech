@@ -3,9 +3,10 @@ package com.diego.prandini.exerciciotecnicoelotech.usecase.inmemory;
 import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoVaziaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
@@ -65,7 +66,7 @@ class CriarPessoaTest {
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Nome da pessoa não pode ser vazio");
+        assertThat(throwable.getMessage()).isEqualTo("Nome não pode ser vazio");
     }
 
     @Test
@@ -80,11 +81,11 @@ class CriarPessoaTest {
         });
 
         assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Nome da pessoa não pode ser vazio");
+        assertThat(throwable.getMessage()).isEqualTo("Nome não pode ser vazio");
     }
 
     @Test
-    void cpfNuloNaoPermitido() {
+    void cpfNaoPodeSerNulo() {
         Throwable throwable = catchThrowable(() -> {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
@@ -94,12 +95,12 @@ class CriarPessoaTest {
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Cpf da pessoa não pode ser vazio");
+        assertThat(throwable).isInstanceOf(CpfVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Cpf não pode ser vazio");
     }
 
     @Test
-    void cpfComApenasEspacosNaoPermitido() {
+    void cpfNaoPodeSerComApenasEspacos() {
         Throwable throwable = catchThrowable(() -> {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
@@ -109,8 +110,8 @@ class CriarPessoaTest {
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaCpfVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Cpf da pessoa não pode ser vazio");
+        assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: ' '");
     }
 
     @Test
@@ -125,7 +126,7 @@ class CriarPessoaTest {
         });
 
         assertThat(throwable).isInstanceOf(CpfInvalidoException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: 37785134669");
+        assertThat(throwable.getMessage()).isEqualTo("Cpf inválido: '37785134669'");
     }
 
     @Test
@@ -155,8 +156,8 @@ class CriarPessoaTest {
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoVaziaException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Data de nascimento da pessoa não pode ser vazia");
+        assertThat(throwable).isInstanceOf(DataDeNascimentoVaziaException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Data de nascimento não pode ser vazia");
     }
 
     @Test
@@ -194,19 +195,46 @@ class CriarPessoaTest {
 
     @Test
     void deveCadastrarDuasPessoasIguais() {
-        CriarPessoa.Output output1 = criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
-        CriarPessoa.Output output2 = criarPessoa.execute(new CriarPessoa.Input(NOME_DEFAULT, CPF_DEFAULT, DATA_DE_NASCIMENTO_DEFAULT));
+        criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT
+        ));
 
-        assertThat(output1).isNotNull();
-        assertThat(output1.id()).isNotNull();
-        assertThat(output1.nome()).isEqualTo(NOME_DEFAULT);
-        assertThat(output1.cpf()).isEqualTo(CPF_DEFAULT);
-        assertThat(output1.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+        Throwable throwable = catchThrowable(() -> criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT
+        )));
 
-        assertThat(output2).isNotNull();
-        assertThat(output2.id()).isNotNull();
-        assertThat(output2.nome()).isEqualTo(NOME_DEFAULT);
-        assertThat(output2.cpf()).isEqualTo(CPF_DEFAULT);
-        assertThat(output2.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+        assertThat(throwable).isInstanceOf(PessoaCpfJaExisteException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Cpf já existe: " + CPF_DEFAULT);
+    }
+
+    @Test
+    void deveCadastrarDuasPessoasComCpfsDiferentes() {
+        CriarPessoa.Output pessoa1 = criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT
+        ));
+
+        CriarPessoa.Output pessoa2 = criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                "47621474602",
+                DATA_DE_NASCIMENTO_DEFAULT
+        ));
+
+        assertThat(pessoa1).isNotNull();
+        assertThat(pessoa1.id()).isNotNull();
+        assertThat(pessoa1.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(pessoa1.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(pessoa1.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+
+        assertThat(pessoa2).isNotNull();
+        assertThat(pessoa2.id()).isNotNull();
+        assertThat(pessoa2.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(pessoa2.cpf()).isEqualTo("47621474602");
+        assertThat(pessoa2.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 }
