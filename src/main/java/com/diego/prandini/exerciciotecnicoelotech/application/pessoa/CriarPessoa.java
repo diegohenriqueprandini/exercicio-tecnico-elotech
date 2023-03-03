@@ -27,20 +27,8 @@ public class CriarPessoa {
     public Output execute(Input input) {
         validarInput(input);
         validarCpfUnico(input);
-        UUID id = UUID.randomUUID();
-        Pessoa.Builder builder = new Pessoa.Builder(
-                id,
-                input.nome,
-                new Cpf(input.cpf),
-                new DataDeNascimento(input.dataDeNascimento, applicationClock)
-        );
-        input.contatos.stream()
-                .map(item -> new Contato(
-                        UUID.randomUUID(),
-                        item.nome,
-                        item.telefone,
-                        item.email
-                )).forEach(builder::contatos);
+        Pessoa.Builder builder = criarBuilder(input);
+        adicionarContatos(builder, input.contatos);
         Pessoa pessoa = builder.build();
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.findById(pessoa.getId());
@@ -60,6 +48,25 @@ public class CriarPessoa {
             throw new CpfJaExisteException(input.cpf);
     }
 
+    private Pessoa.Builder criarBuilder(Input input) {
+        return new Pessoa.Builder(
+                UUID.randomUUID(),
+                input.nome,
+                new Cpf(input.cpf),
+                new DataDeNascimento(input.dataDeNascimento, applicationClock)
+        );
+    }
+
+    private void adicionarContatos(Pessoa.Builder builder, List<ContatoInput> contatosInput) {
+        contatosInput.stream()
+                .map(item -> new Contato(
+                        UUID.randomUUID(),
+                        item.nome,
+                        item.telefone,
+                        item.email
+                )).forEach(builder::contatos);
+    }
+
     private Output toOutput(Pessoa pessoa) {
         return new Output(
                 pessoa.getId(),
@@ -77,18 +84,18 @@ public class CriarPessoa {
     ) {
     }
 
+    public record ContatoInput(
+            String nome,
+            String telefone,
+            String email
+    ) {
+    }
+
     public record Output(
             UUID id,
             String nome,
             String cpf,
             LocalDate dataDeNascimento
-    ) {
-    }
-
-    public record ContatoInput(
-            String nome,
-            String telefone,
-            String email
     ) {
     }
 }

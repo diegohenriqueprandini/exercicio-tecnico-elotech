@@ -20,12 +20,7 @@ public class AlterarContatoPessoa {
     public Output execute(UUID idPessoa, UUID idContato, Input input) {
         validarInput(idPessoa, idContato, input);
         Pessoa pessoa = pessoaRepository.findById(idPessoa);
-        pessoa.alterarContato(new Contato(
-                idContato,
-                input.nome,
-                input.telefone,
-                input.email
-        ));
+        alterarContato(pessoa, idContato, input);
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.findById(idPessoa);
         Contato contatoSaved = pessoaSaved.buscarContato(idContato);
@@ -39,6 +34,15 @@ public class AlterarContatoPessoa {
             throw new IdContatoNuloException();
         if (input == null)
             throw new InputNuloException();
+    }
+
+    private void alterarContato(Pessoa pessoa, UUID idContato, Input input) {
+        pessoa.alterarContato(new Contato(
+                idContato,
+                input.nome,
+                input.telefone,
+                input.email
+        ));
     }
 
     private Output toOutput(Pessoa pessoa, Contato contato) {

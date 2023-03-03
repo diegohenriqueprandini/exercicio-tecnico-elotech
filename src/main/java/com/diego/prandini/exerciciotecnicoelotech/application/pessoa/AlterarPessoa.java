@@ -25,10 +25,8 @@ public class AlterarPessoa {
     public Output execute(UUID id, Input input) {
         validarInput(id, input);
         Pessoa pessoa = pessoaRepository.findById(id);
-        validarCpfUnico(input, pessoa);
-        pessoa.setNome(input.nome);
-        pessoa.setCpf(new Cpf(input.cpf));
-        pessoa.setDataDeNascimento(new DataDeNascimento(input.dataDeNascimento, applicationClock));
+        validarCpfUnico(pessoa, input);
+        alterarPessoa(pessoa, input);
         pessoaRepository.save(pessoa);
         Pessoa saved = pessoaRepository.findById(id);
         return toOutput(saved);
@@ -41,10 +39,16 @@ public class AlterarPessoa {
             throw new InputNuloException();
     }
 
-    private void validarCpfUnico(Input input, Pessoa pessoa) {
+    private void validarCpfUnico(Pessoa pessoa, Input input) {
         Optional<Pessoa> pessoaComMesmoCpf = pessoaRepository.findByCpf(new Cpf(input.cpf));
         if (pessoaComMesmoCpf.isPresent() && !pessoaComMesmoCpf.get().getId().equals(pessoa.getId()))
             throw new CpfJaExisteException(input.cpf);
+    }
+
+    private void alterarPessoa(Pessoa pessoa, Input input) {
+        pessoa.setNome(input.nome);
+        pessoa.setCpf(new Cpf(input.cpf));
+        pessoa.setDataDeNascimento(new DataDeNascimento(input.dataDeNascimento, applicationClock));
     }
 
     private Output toOutput(Pessoa pessoa) {

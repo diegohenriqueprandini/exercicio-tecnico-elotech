@@ -19,14 +19,7 @@ public class AdicionarContatoPessoa {
     public Output execute(UUID idPessoa, Input input) {
         validarInput(idPessoa, input);
         Pessoa pessoa = pessoaRepository.findById(idPessoa);
-        UUID id = UUID.randomUUID();
-        Contato contato = new Contato(
-                id,
-                input.nome,
-                input.telefone,
-                input.email
-        );
-        pessoa.adicionarContato(contato);
+        UUID id = adicionarContato(pessoa, input);
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.findById(idPessoa);
         Contato contatoSaved = pessoaSaved.buscarContato(id);
@@ -38,6 +31,18 @@ public class AdicionarContatoPessoa {
             throw new IdPessoaNuloException();
         if (input == null)
             throw new InputNuloException();
+    }
+
+    private UUID adicionarContato(Pessoa pessoa, Input input) {
+        UUID id = UUID.randomUUID();
+        Contato contato = new Contato(
+                id,
+                input.nome,
+                input.telefone,
+                input.email
+        );
+        pessoa.adicionarContato(contato);
+        return id;
     }
 
     private Output toOutput(Pessoa pessoa, Contato contato) {
