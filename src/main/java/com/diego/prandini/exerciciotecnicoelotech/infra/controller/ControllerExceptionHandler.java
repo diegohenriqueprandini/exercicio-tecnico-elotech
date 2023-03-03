@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.controller;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

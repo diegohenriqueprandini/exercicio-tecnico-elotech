@@ -5,7 +5,8 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNuloException
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.IdNuloException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +37,7 @@ public class Pessoa {
             DataDeNascimento dataDeNascimento
     ) {
         if (id == null)
-            throw new IdNuloException();
+            throw new IdPessoaNuloException();
         this.id = id;
         setNome(nome);
         setCpf(cpf);
@@ -94,6 +96,21 @@ public class Pessoa {
         toUpdate.setNome(contato.getNome());
         toUpdate.setTelefone(contato.getTelefone());
         toUpdate.setEmail(contato.getEmail());
+    }
+
+    public Contato buscarContato(UUID id) {
+        if (id == null)
+            throw new IdContatoNuloException();
+        return this.contatos.stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ContatoNotFoundException(id));
+    }
+
+    public List<Contato> getContatos() {
+        return List.copyOf(contatos.stream()
+                .sorted(Comparator.comparing(Contato::getNome))
+                .toList());
     }
 
     @RequiredArgsConstructor

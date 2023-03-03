@@ -2,7 +2,7 @@ package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoFuturaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

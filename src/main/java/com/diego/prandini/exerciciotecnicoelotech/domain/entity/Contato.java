@@ -2,7 +2,7 @@ package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
 
 import com.diego.prandini.exerciciotecnicoelotech.exception.EmailInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.EmailVazioException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.IdNuloException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.TelefoneInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.TelefoneVazioException;
@@ -23,7 +23,7 @@ public class Contato {
 
     public Contato(UUID id, String nome, String telefone, String email) {
         if (id == null)
-            throw new IdNuloException();
+            throw new IdContatoNuloException();
         if (StringUtils.isBlank(nome))
             throw new NomeVazioException();
         if (telefone == null)
