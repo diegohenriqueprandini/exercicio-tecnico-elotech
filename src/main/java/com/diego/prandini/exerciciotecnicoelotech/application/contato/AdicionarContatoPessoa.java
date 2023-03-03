@@ -28,7 +28,7 @@ public class AdicionarContatoPessoa {
         );
         pessoa.adicionarContato(contato);
         pessoaRepository.save(pessoa);
-        Pessoa pessoaSaved = pessoaRepository.findById(pessoa.getId());
+        Pessoa pessoaSaved = pessoaRepository.findById(idPessoa);
         Contato contatoSaved = pessoaSaved.buscarContato(id);
         return toOutput(pessoaSaved, contatoSaved);
     }
@@ -41,12 +41,18 @@ public class AdicionarContatoPessoa {
     }
 
     private Output toOutput(Pessoa pessoa, Contato contato) {
-        return new Output(
+        ContatoOutput contatoOutput = new ContatoOutput(
                 contato.getId(),
-                pessoa.getId(),
                 contato.getNome(),
                 contato.getTelefone(),
                 contato.getEmail()
+        );
+        PessoaOutput pessoaOutput = new PessoaOutput(
+                pessoa.getId()
+        );
+        return new Output(
+                contatoOutput,
+                pessoaOutput
         );
     }
 
@@ -58,11 +64,21 @@ public class AdicionarContatoPessoa {
     }
 
     public record Output(
+            ContatoOutput contato,
+            PessoaOutput pessoa
+    ) {
+    }
+
+    public record ContatoOutput(
             UUID id,
-            UUID idPessoa,
             String nome,
             String telefone,
             String email
+    ) {
+    }
+
+    public record PessoaOutput(
+            UUID id
     ) {
     }
 }

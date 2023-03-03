@@ -1,9 +1,11 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.contato;
 
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.AdicionarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.AlterarContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.BuscarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.ListarContatosPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.pessoa.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
@@ -17,7 +19,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AdicionarContatoPessoaTest {
+public class AlterarContatoPessoaTest {
 
     private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
@@ -39,23 +41,26 @@ public class AdicionarContatoPessoaTest {
     private static final String NOVO_EMAIL_DEFAULT = "contato2@email.com";
 
     private CriarPessoa criarPessoa;
-    private AdicionarContatoPessoa adicionarContatoPessoa;
+    private AlterarContatoPessoa alterarContatoPessoa;
     private BuscarContatoPessoa buscarContatoPessoa;
     private UUID idPessoaDefault;
+    private UUID idContatoDefault;
 
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+        ListarContatosPessoa listarContatosPessoa = new ListarContatosPessoa(pessoaRepository);
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
-        adicionarContatoPessoa = new AdicionarContatoPessoa(pessoaRepository);
+        alterarContatoPessoa = new AlterarContatoPessoa(pessoaRepository);
         buscarContatoPessoa = new BuscarContatoPessoa(pessoaRepository);
         idPessoaDefault = criarPessoaParaAlteracoes();
+        idContatoDefault = listarContatosPessoa.execute(idPessoaDefault).contatos().stream().findFirst().orElseThrow(ContatosVazioException::new).id();
     }
 
     @Test
-    void deveAdicionarContatoAUmaPessoa() {
-        AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoaDefault, new AdicionarContatoPessoa.Input(
+    void deveAlterarContatoDeUmaPessoa() {
+        AlterarContatoPessoa.Output output = alterarContatoPessoa.execute(idPessoaDefault, idContatoDefault, new AlterarContatoPessoa.Input(
                 NOVO_CONTATO_DEFAULT,
                 NOVO_TELEFONE_DEFAULT,
                 NOVO_EMAIL_DEFAULT

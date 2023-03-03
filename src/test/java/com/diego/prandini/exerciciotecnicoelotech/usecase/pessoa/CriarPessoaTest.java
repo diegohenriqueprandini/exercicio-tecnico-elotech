@@ -285,6 +285,6 @@ class CriarPessoaTest {
         Throwable throwable = catchThrowable(() -> criarPessoa.execute(input));
 
         assertThat(throwable).isInstanceOf(ContatosVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Pessoa deve possuir ao menos um contato");
+        assertThat(throwable.getMessage()).isEqualTo("Deve possuir ao menos um contato");
     }
 }

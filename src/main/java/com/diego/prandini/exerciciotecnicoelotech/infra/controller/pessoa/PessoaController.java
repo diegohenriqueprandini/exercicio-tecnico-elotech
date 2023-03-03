@@ -3,6 +3,7 @@ package com.diego.prandini.exerciciotecnicoelotech.infra.controller.pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.AlterarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.ListarPessoas;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.RemoverPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PessoaController {
 
+    private final ListarPessoas listarPessoas;
     private final BuscarPessoa buscarPessoa;
     private final CriarPessoa criarPessoa;
     private final AlterarPessoa alterarPessoa;
     private final RemoverPessoa removerPessoa;
+
+    @GetMapping
+    public ResponseEntity<ListarPessoas.Output> listar() {
+        ListarPessoas.Output output = listarPessoas.execute();
+        return ResponseEntity.ok(output);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<BuscarPessoa.Output> buscar(@PathVariable UUID id) {

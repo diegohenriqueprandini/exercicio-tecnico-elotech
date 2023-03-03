@@ -5,6 +5,7 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.InputNuloException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,22 +13,32 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class BuscarContatoPessoa {
+public class AlterarContatoPessoa {
 
     private final PessoaRepository pessoaRepository;
 
-    public Output execute(UUID idPessoa, UUID idContato) {
-        validarInput(idPessoa, idContato);
+    public Output execute(UUID idPessoa, UUID idContato, Input input) {
+        validarInput(idPessoa, idContato, input);
         Pessoa pessoa = pessoaRepository.findById(idPessoa);
-        Contato contato = pessoa.buscarContato(idContato);
-        return toOutput(pessoa, contato);
+        pessoa.alterarContato(new Contato(
+                idContato,
+                input.nome,
+                input.telefone,
+                input.email
+        ));
+        pessoaRepository.save(pessoa);
+        Pessoa pessoaSaved = pessoaRepository.findById(idPessoa);
+        Contato contatoSaved = pessoaSaved.buscarContato(idContato);
+        return toOutput(pessoaSaved, contatoSaved);
     }
 
-    private void validarInput(UUID idPessoa, UUID idContato) {
+    private void validarInput(UUID idPessoa, UUID idContato, Input input) {
         if (idPessoa == null)
             throw new IdPessoaNuloException();
         if (idContato == null)
             throw new IdContatoNuloException();
+        if (input == null)
+            throw new InputNuloException();
     }
 
     private Output toOutput(Pessoa pessoa, Contato contato) {
@@ -44,6 +55,13 @@ public class BuscarContatoPessoa {
                 contatoOutput,
                 pessoaOutput
         );
+    }
+
+    public record Input(
+            String nome,
+            String telefone,
+            String email
+    ) {
     }
 
     public record Output(

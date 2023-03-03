@@ -1,14 +1,18 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.controller.contato;
 
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.AdicionarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.AlterarContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.BuscarContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.ListarContatosPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.RemoverContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +27,8 @@ public class ContatoController {
     private final ListarContatosPessoa listarContatosPessoa;
     private final BuscarContatoPessoa buscarContatoPessoa;
     private final AdicionarContatoPessoa adicionarContatoPessoa;
+    private final AlterarContatoPessoa alterarContatoPessoa;
+    private final RemoverContatoPessoa removerContatoPessoa;
 
     @GetMapping
     public ResponseEntity<ListarContatosPessoa.Output> listar(@PathVariable UUID idPessoa) {
@@ -39,7 +45,19 @@ public class ContatoController {
     @PostMapping
     public ResponseEntity<AdicionarContatoPessoa.Output> adicionar(@PathVariable UUID idPessoa, @RequestBody AdicionarContatoPessoa.Input input) {
         AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoa, input);
-        String resource = String.format("/pessoas/%s/contatos/%s", output.idPessoa(), output.id());
-        return ResponseEntity.created(ApiUtils.createUri(output.id(), resource)).body(output);
+        String resource = String.format("/pessoas/%s/contatos/%s", output.pessoa().id(), output.contato().id());
+        return ResponseEntity.created(ApiUtils.createUri(output.contato().id(), resource)).body(output);
+    }
+
+    @PutMapping("/{idContato}")
+    public ResponseEntity<AlterarContatoPessoa.Output> alterar(@PathVariable UUID idPessoa, @PathVariable UUID idContato, @RequestBody AlterarContatoPessoa.Input input) {
+        AlterarContatoPessoa.Output output = alterarContatoPessoa.execute(idPessoa, idContato, input);
+        return ResponseEntity.ok(output);
+    }
+
+    @DeleteMapping("/{idContato}")
+    public ResponseEntity<Void> remover(@PathVariable UUID idPessoa, @PathVariable UUID idContato) {
+        removerContatoPessoa.execute(idPessoa, idContato);
+        return ResponseEntity.noContent().build();
     }
 }

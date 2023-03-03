@@ -70,7 +70,7 @@ class PessoaTest {
         ).build());
 
         assertThat(throwable).isInstanceOf(ContatosVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Pessoa deve possuir ao menos um contato");
+        assertThat(throwable.getMessage()).isEqualTo("Deve possuir ao menos um contato");
     }
 
     @Test
@@ -95,7 +95,7 @@ class PessoaTest {
         Throwable throwable = catchThrowable(() -> pessoa.removerContato(idContato));
 
         assertThat(throwable).isInstanceOf(ContatosVazioException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Pessoa deve possuir ao menos um contato");
+        assertThat(throwable.getMessage()).isEqualTo("Deve possuir ao menos um contato");
     }
 
     @Test

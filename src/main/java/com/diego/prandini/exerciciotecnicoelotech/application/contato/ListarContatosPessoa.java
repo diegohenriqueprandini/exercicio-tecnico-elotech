@@ -20,7 +20,7 @@ public class ListarContatosPessoa {
         validarInput(idPessoa);
         Pessoa pessoa = pessoaRepository.findById(idPessoa);
         List<Contato> contatos = pessoa.getContatos();
-        return toOutput(contatos);
+        return toOutput(pessoa, contatos);
     }
 
     private void validarInput(UUID idPessoa) {
@@ -28,7 +28,7 @@ public class ListarContatosPessoa {
             throw new IdPessoaNuloException();
     }
 
-    private Output toOutput(List<Contato> contatos) {
+    private Output toOutput(Pessoa pessoa, List<Contato> contatos) {
         List<ContatoOutput> contatosOutput = contatos.stream()
                 .map(item -> new ContatoOutput(
                         item.getId(),
@@ -36,13 +36,23 @@ public class ListarContatosPessoa {
                         item.getTelefone(),
                         item.getEmail()
                 )).toList();
+        PessoaOutput pessoaOutput = new PessoaOutput(
+                pessoa.getId()
+        );
         return new Output(
-                contatosOutput
+                contatosOutput,
+                pessoaOutput
         );
     }
 
     public record Output(
-            List<ContatoOutput> contatos
+            List<ContatoOutput> contatos,
+            PessoaOutput pessoa
+    ) {
+    }
+
+    public record PessoaOutput(
+            UUID id
     ) {
     }
 

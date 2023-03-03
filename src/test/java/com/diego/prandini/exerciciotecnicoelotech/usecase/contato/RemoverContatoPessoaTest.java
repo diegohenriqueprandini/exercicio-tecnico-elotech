@@ -2,8 +2,12 @@ package com.diego.prandini.exerciciotecnicoelotech.usecase.contato;
 
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.AdicionarContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.contato.BuscarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.ListarContatosPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.contato.RemoverContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNotFoundException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.pessoa.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
@@ -16,8 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class AdicionarContatoPessoaTest {
+public class RemoverContatoPessoaTest {
 
     private static final LocalDate TODAY_MOCK = LocalDate.of(2023, Month.MARCH, 1);
 
@@ -40,39 +45,49 @@ public class AdicionarContatoPessoaTest {
 
     private CriarPessoa criarPessoa;
     private AdicionarContatoPessoa adicionarContatoPessoa;
+    private RemoverContatoPessoa removerContatoPessoa;
     private BuscarContatoPessoa buscarContatoPessoa;
     private UUID idPessoaDefault;
+    private UUID idContatoDefault;
 
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+        ListarContatosPessoa listarContatosPessoa = new ListarContatosPessoa(pessoaRepository);
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
         adicionarContatoPessoa = new AdicionarContatoPessoa(pessoaRepository);
+        removerContatoPessoa = new RemoverContatoPessoa(pessoaRepository);
         buscarContatoPessoa = new BuscarContatoPessoa(pessoaRepository);
         idPessoaDefault = criarPessoaParaAlteracoes();
+        idContatoDefault = listarContatosPessoa.execute(idPessoaDefault).contatos().stream().findFirst().orElseThrow(ContatosVazioException::new).id();
     }
 
     @Test
-    void deveAdicionarContatoAUmaPessoa() {
-        AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoaDefault, new AdicionarContatoPessoa.Input(
-                NOVO_CONTATO_DEFAULT,
-                NOVO_TELEFONE_DEFAULT,
-                NOVO_EMAIL_DEFAULT
-        ));
+    void deveRemoverContatoDePessoaComPeloMenosDoisContatos() {
+        UUID idContatoNovo = adicionarContatoPessoa();
 
+        removerContatoPessoa.execute(idPessoaDefault, idContatoNovo);
+
+        Throwable throwable = catchThrowable(() -> buscarContatoPessoa.execute(idPessoaDefault, idContatoNovo));
+        assertThat(throwable).isInstanceOf(ContatoNotFoundException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Contato não encontrado: " + idContatoNovo);
+    }
+
+    @Test
+    void naoRemoveSeContatosFicarVazio() {
+        Throwable throwable = catchThrowable(() -> removerContatoPessoa.execute(idPessoaDefault, idContatoDefault));
+
+        assertThat(throwable).isInstanceOf(ContatosVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Deve possuir ao menos um contato");
+
+        BuscarContatoPessoa.Output output = buscarContatoPessoa.execute(idPessoaDefault, idContatoDefault);
         assertThat(output).isNotNull();
         assertThat(output.contato()).isNotNull();
         assertThat(output.contato().id()).isNotNull();
-        assertThat(output.contato().nome()).isEqualTo(NOVO_CONTATO_DEFAULT);
-        assertThat(output.contato().telefone()).isEqualTo(NOVO_TELEFONE_DEFAULT);
-        assertThat(output.contato().email()).isEqualTo(NOVO_EMAIL_DEFAULT);
-
-        BuscarContatoPessoa.Output outputBuscar = buscarContatoPessoa.execute(idPessoaDefault, output.contato().id());
-        assertThat(outputBuscar.contato().id()).isNotNull();
-        assertThat(outputBuscar.contato().nome()).isEqualTo(NOVO_CONTATO_DEFAULT);
-        assertThat(outputBuscar.contato().telefone()).isEqualTo(NOVO_TELEFONE_DEFAULT);
-        assertThat(outputBuscar.contato().email()).isEqualTo(NOVO_EMAIL_DEFAULT);
+        assertThat(output.contato().nome()).isEqualTo(CONTATO_DEFAULT);
+        assertThat(output.contato().telefone()).isEqualTo(TELEFONE_DEFAULT);
+        assertThat(output.contato().email()).isEqualTo(EMAIL_DEFAULT);
     }
 
     private UUID criarPessoaParaAlteracoes() {
@@ -85,5 +100,15 @@ public class AdicionarContatoPessoaTest {
         CriarPessoa.Output output = criarPessoa.execute(input);
         assertThat(output).isNotNull();
         return output.id();
+    }
+
+    private UUID adicionarContatoPessoa() {
+        AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoaDefault, new AdicionarContatoPessoa.Input(
+                NOVO_CONTATO_DEFAULT,
+                NOVO_TELEFONE_DEFAULT,
+                NOVO_EMAIL_DEFAULT
+        ));
+        assertThat(output.contato().id()).isNotNull();
+        return output.contato().id();
     }
 }
