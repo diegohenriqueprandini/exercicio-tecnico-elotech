@@ -32,7 +32,6 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 ### Itens Pendendes
 * Criar api de contatos
 * Criar VOs de contatos
-* Todos os campos são obrigatórios, tanto da pessoa como do contato
-* Validar sintaxe do email do contato
+* Formatação do telefone
 * Os dados devem ser persistidos utilizando um banco de dados relacional.
 * Possuir ao menos os endpoints: GET (Busca paginada opção de filtro para retornar várias pessoas)
