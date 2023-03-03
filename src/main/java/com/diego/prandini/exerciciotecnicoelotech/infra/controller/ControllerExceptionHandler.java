@@ -31,7 +31,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public final ResponseEntity<ControllerErrorData> runtimeException(RuntimeException e, WebRequest request) {
         final var details = createDefaultExceptionDetails(e, request);
-        return createDefaultResponseByException(details, HttpStatus.NOT_FOUND);
+        HttpStatus httpStatus = ExceptionHandlerMap.NOT_FOUND.contains(e.getClass()) ? HttpStatus.NOT_FOUND : HttpStatus.BAD_REQUEST;
+        return createDefaultResponseByException(details, httpStatus);
     }
 
     @ExceptionHandler(JsonUtils.JsonUtilsException.class)
