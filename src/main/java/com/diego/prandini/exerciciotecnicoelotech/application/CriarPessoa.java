@@ -33,12 +33,13 @@ public class CriarPessoa {
                 new Cpf(input.cpf),
                 new DataDeNascimento(input.dataDeNascimento, applicationClock)
         );
-        input.contatos.stream().map(item -> new Contato(
-                UUID.randomUUID(),
-                item.nome,
-                item.telefone,
-                item.email
-        )).forEach(builder::contatos);
+        input.contatos.stream()
+                .map(item -> new Contato(
+                        UUID.randomUUID(),
+                        item.nome,
+                        item.telefone,
+                        item.email
+                )).forEach(builder::contatos);
         Pessoa pessoa = builder.build();
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.findById(pessoa.getId());

@@ -5,6 +5,7 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNuloException
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.IdNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.EqualsAndHashCode;
@@ -33,6 +34,8 @@ public class Pessoa {
             Cpf cpf,
             DataDeNascimento dataDeNascimento
     ) {
+        if (id == null)
+            throw new IdNuloException();
         this.id = id;
         setNome(nome);
         setCpf(cpf);
