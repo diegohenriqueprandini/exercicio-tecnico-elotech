@@ -1,16 +1,18 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.inmemory;
 
 import com.diego.prandini.exerciciotecnicoelotech.application.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,22 +26,36 @@ public class BuscarPessoaTest {
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
 
-    @Test
-    void deveBuscarUmaPessoaPeloId() {
+    private static final String CONTATO_DEFAULT = "Contato1";
+    private static final String TELEFONE_DEFAULT = "44988776655";
+    private static final String EMAIL_DEFAULT = "contato@email.com";
+
+    private CriarPessoa criarPessoa;
+    private BuscarPessoa buscarPessoa;
+    private UUID idPessoaDefault;
+
+    @BeforeEach
+    void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-
-        UUID id = UUID.randomUUID();
-        pessoaRepository.save(Pessoa.of(
-                id,
+        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        buscarPessoa = new BuscarPessoa(pessoaRepository);
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
-                applicationClock
-        ));
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
 
-        BuscarPessoa buscarPessoa = new BuscarPessoa(pessoaRepository);
-        BuscarPessoa.Output output = buscarPessoa.execute(id);
+                ))
+        ));
+    }
+
+    @Test
+    void deveBuscarUmaPessoaPeloId() {
+        BuscarPessoa.Output output = buscarPessoa.execute(idPessoaDefault);
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
@@ -50,14 +66,16 @@ public class BuscarPessoaTest {
 
     @Test
     void idInexistenteDeveRetornarErro() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-        BuscarPessoa buscarPessoa = new BuscarPessoa(pessoaRepository);
-
         UUID id = UUID.randomUUID();
-
         Throwable throwable = catchThrowable(() -> buscarPessoa.execute(id));
 
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + id);
+    }
+
+    private UUID criarPessoaDefaultParaAlteracoes(CriarPessoa.Input input) {
+        CriarPessoa.Output output = criarPessoa.execute(input);
+        assertThat(output).isNotNull();
+        return output.id();
     }
 }

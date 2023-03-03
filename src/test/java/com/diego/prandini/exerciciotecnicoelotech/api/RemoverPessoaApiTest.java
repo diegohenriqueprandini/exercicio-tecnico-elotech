@@ -1,27 +1,24 @@
 package com.diego.prandini.exerciciotecnicoelotech.api;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.api.support.MockMvcPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.infra.controller.ControllerErrorData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -29,40 +26,49 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class RemoverPessoaApiTest {
 
-    private static final UUID ID_DEFAULT = UUID.randomUUID();
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
 
-    @Autowired
-    private MockMvc mockMvc;
+    private static final String CONTATO_DEFAULT = "Contato1";
+    private static final String TELEFONE_DEFAULT = "44988776655";
+    private static final String EMAIL_DEFAULT = "contato@email.com";
 
     @Autowired
-    private PessoaRepository pessoaRepository;
+    private MockMvcPessoa mockMvcPessoa;
 
-    @Autowired
-    private ApplicationClock applicationClock;
+    private UUID idPessoaDefault;
+
+    @BeforeEach
+    void setup() throws Exception {
+        idPessoaDefault = criarPessoaParaAlteracoes();
+    }
 
     @Test
     void deveRemoverPessoaPeloId() throws Exception {
-        pessoaRepository.save(Pessoa.of(
-                ID_DEFAULT,
+        mockMvcPessoa.doDeletePessoa(idPessoaDefault);
+
+        ResultMatcher notFound = status().isNotFound();
+        ControllerErrorData output = mockMvcPessoa.doGetPessoaError(idPessoaDefault, notFound);
+        assertThat(output).isNotNull();
+        assertThat(output.getTimestamp()).isNotNull();
+        assertThat(output.getMessage()).isEqualTo("Pessoa não encontrada: " + idPessoaDefault);
+        assertThat(output.getDetail()).isEqualTo("method=GET,uri=/pessoas/" + idPessoaDefault);
+    }
+
+    private UUID criarPessoaParaAlteracoes() throws Exception {
+        CriarPessoa.Output output = mockMvcPessoa.doPostPessoa(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
-                applicationClock
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
         ));
-
-        doDeletePessoa();
-
-        Throwable throwable = catchThrowable(() -> pessoaRepository.findById(ID_DEFAULT));
-        assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + ID_DEFAULT);
-    }
-
-    private void doDeletePessoa() throws Exception {
-        mockMvc.perform(delete("/pessoas/{id}", ID_DEFAULT).contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(jsonPath("$").doesNotExist());
+        assertThat(output).isNotNull();
+        return output.id();
     }
 }

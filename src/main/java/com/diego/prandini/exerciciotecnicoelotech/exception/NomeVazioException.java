@@ -1,8 +1,8 @@
 package com.diego.prandini.exerciciotecnicoelotech.exception;
 
-public class PessoaNomeVazioException extends RuntimeException {
+public class NomeVazioException extends RuntimeException {
 
-    public PessoaNomeVazioException() {
+    public NomeVazioException() {
         super("Nome não pode ser vazio");
     }
 }

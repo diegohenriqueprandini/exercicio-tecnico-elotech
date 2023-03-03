@@ -1,13 +1,15 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.inmemory;
 
+import com.diego.prandini.exerciciotecnicoelotech.application.BuscarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoFuturaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaCpfJaExisteException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaDataDeNascimentoFuturaException;
-import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNomeVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -29,21 +32,33 @@ class CriarPessoaTest {
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
 
+    private static final String CONTATO_DEFAULT = "Contato1";
+    private static final String TELEFONE_DEFAULT = "44988776655";
+    private static final String EMAIL_DEFAULT = "contato@email.com";
+    private static final List<CriarPessoa.ContatoInput> CONTATOS_DEFAULT = List.of(new CriarPessoa.ContatoInput(
+            CONTATO_DEFAULT,
+            TELEFONE_DEFAULT,
+            EMAIL_DEFAULT
+    ));
+
     private CriarPessoa criarPessoa;
+    private BuscarPessoa buscarPessoa;
 
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        buscarPessoa = new BuscarPessoa(pessoaRepository);
     }
 
     @Test
-    void deveCriarUmaPessoaComNomeCpfEDataDeNascimento() {
+    void deveCriarUmaPessoaComNomeCpfDataDeNascimentoEUmContato() {
         CriarPessoa.Input input = new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
 
@@ -52,6 +67,13 @@ class CriarPessoaTest {
         assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
         assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
         assertThat(output.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+
+        BuscarPessoa.Output buscarOutput = buscarPessoa.execute(output.id());
+        assertThat(buscarOutput).isNotNull();
+        assertThat(buscarOutput.id()).isEqualTo(output.id());
+        assertThat(buscarOutput.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(buscarOutput.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(buscarOutput.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 
     @Test
@@ -60,12 +82,13 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     null,
                     CPF_DEFAULT,
-                    DATA_DE_NASCIMENTO_DEFAULT
+                    DATA_DE_NASCIMENTO_DEFAULT,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
+        assertThat(throwable).isInstanceOf(NomeVazioException.class);
         assertThat(throwable.getMessage()).isEqualTo("Nome não pode ser vazio");
     }
 
@@ -75,12 +98,13 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     " ",
                     CPF_DEFAULT,
-                    DATA_DE_NASCIMENTO_DEFAULT
+                    DATA_DE_NASCIMENTO_DEFAULT,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaNomeVazioException.class);
+        assertThat(throwable).isInstanceOf(NomeVazioException.class);
         assertThat(throwable.getMessage()).isEqualTo("Nome não pode ser vazio");
     }
 
@@ -90,7 +114,8 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
                     null,
-                    DATA_DE_NASCIMENTO_DEFAULT
+                    DATA_DE_NASCIMENTO_DEFAULT,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
@@ -105,7 +130,8 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
                     " ",
-                    DATA_DE_NASCIMENTO_DEFAULT
+                    DATA_DE_NASCIMENTO_DEFAULT,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
@@ -120,7 +146,8 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
                     "37785134669",
-                    DATA_DE_NASCIMENTO_DEFAULT
+                    DATA_DE_NASCIMENTO_DEFAULT,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
@@ -134,7 +161,8 @@ class CriarPessoaTest {
         CriarPessoa.Input input = new CriarPessoa.Input(
                 NOME_DEFAULT,
                 "377.831.326-69",
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
 
@@ -151,7 +179,8 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
                     CPF_DEFAULT,
-                    null
+                    null,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
@@ -167,12 +196,13 @@ class CriarPessoaTest {
             CriarPessoa.Input input = new CriarPessoa.Input(
                     NOME_DEFAULT,
                     CPF_DEFAULT,
-                    dataDeNascimento
+                    dataDeNascimento,
+                    CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
         });
 
-        assertThat(throwable).isInstanceOf(PessoaDataDeNascimentoFuturaException.class);
+        assertThat(throwable).isInstanceOf(DataDeNascimentoFuturaException.class);
         assertThat(throwable.getMessage()).isEqualTo("Data de nascimento não pode ser futura: " + DateUtils.toString(dataDeNascimento));
     }
 
@@ -182,7 +212,8 @@ class CriarPessoaTest {
         CriarPessoa.Input input = new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
-                dataDeNascimento
+                dataDeNascimento,
+                CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
 
@@ -198,16 +229,18 @@ class CriarPessoaTest {
         criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         ));
 
         Throwable throwable = catchThrowable(() -> criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         )));
 
-        assertThat(throwable).isInstanceOf(PessoaCpfJaExisteException.class);
+        assertThat(throwable).isInstanceOf(CpfJaExisteException.class);
         assertThat(throwable.getMessage()).isEqualTo("Cpf já existe: " + CPF_DEFAULT);
     }
 
@@ -216,13 +249,15 @@ class CriarPessoaTest {
         CriarPessoa.Output pessoa1 = criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         ));
 
         CriarPessoa.Output pessoa2 = criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 "47621474602",
-                DATA_DE_NASCIMENTO_DEFAULT
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATOS_DEFAULT
         ));
 
         assertThat(pessoa1).isNotNull();
@@ -236,5 +271,20 @@ class CriarPessoaTest {
         assertThat(pessoa2.nome()).isEqualTo(NOME_DEFAULT);
         assertThat(pessoa2.cpf()).isEqualTo("47621474602");
         assertThat(pessoa2.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+    }
+
+    @Test
+    void naoDeveCriarPessoaSemContato() {
+        CriarPessoa.Input input = new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                null
+        );
+
+        Throwable throwable = catchThrowable(() -> criarPessoa.execute(input));
+
+        assertThat(throwable).isInstanceOf(ContatosVazioException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Pessoa deve possuir ao menos um contato");
     }
 }

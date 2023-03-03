@@ -13,7 +13,6 @@ class CpfTest {
     void deveCriarUmCpfValido() {
         Cpf cpf = new Cpf("47757818800");
 
-        assertThat(cpf).isNotNull();
         assertThat(cpf.get()).isEqualTo("47757818800");
     }
 
@@ -21,7 +20,6 @@ class CpfTest {
     void deveRemoverAMascaraDoCpf() {
         Cpf cpf = new Cpf("477.578.188-00");
 
-        assertThat(cpf).isNotNull();
         assertThat(cpf.get()).isEqualTo("47757818800");
     }
 

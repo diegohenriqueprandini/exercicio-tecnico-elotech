@@ -1,16 +1,19 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.inmemory;
 
+import com.diego.prandini.exerciciotecnicoelotech.application.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.RemoverPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.ApplicationClockMock;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,61 +27,91 @@ public class RemoverPessoaTest {
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
 
+    private static final String CONTATO_DEFAULT = "Contato1";
+    private static final String TELEFONE_DEFAULT = "44988776655";
+    private static final String EMAIL_DEFAULT = "contato@email.com";
+
+    private CriarPessoa criarPessoa;
+    private RemoverPessoa removerPessoa;
+    private BuscarPessoa buscarPessoa;
+    private UUID idPessoaDefault;
+
+    @BeforeEach
+    void setup() {
+        ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
+        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        removerPessoa = new RemoverPessoa(pessoaRepository);
+        buscarPessoa = new BuscarPessoa(pessoaRepository);
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
+        ));
+    }
+
     @Test
     void deveRemoverPessoaPeloId() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+        removerPessoa.execure(idPessoaDefault);
 
-        UUID id = criarPessoa(CPF_DEFAULT, pessoaRepository);
-
-        RemoverPessoa removerPessoa = new RemoverPessoa(pessoaRepository);
-        removerPessoa.execure(id);
-
-        Throwable throwable = catchThrowable(() -> pessoaRepository.findById(id));
+        Throwable throwable = catchThrowable(() -> buscarPessoa.execute(idPessoaDefault));
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
-        assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + id);
+        assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + idPessoaDefault);
     }
 
     @Test
     void idInexistenteDeveRetornarErro() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-
         UUID id = UUID.randomUUID();
-
-        RemoverPessoa removerPessoa = new RemoverPessoa(pessoaRepository);
-
         Throwable throwable = catchThrowable(() -> removerPessoa.execure(id));
+
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + id);
     }
 
     @Test
-    void deveRemoverAPessoaCertaPeloId() {
-        PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
+    void dadoDuasPessoasDeveRemoverUmaPeloId() {
+        UUID idPessoa1 = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                "84873547938",
+                DATA_DE_NASCIMENTO_DEFAULT,
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
 
-        UUID idPessoa1 = criarPessoa("84873547938", pessoaRepository);
-        UUID idPessoa2 = criarPessoa("06040259710", pessoaRepository);
+                ))
+        ));
+        UUID idPessoa2 = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                "06040259710",
+                DATA_DE_NASCIMENTO_DEFAULT,
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
 
-        RemoverPessoa removerPessoa = new RemoverPessoa(pessoaRepository);
+                ))
+        ));
+
         removerPessoa.execure(idPessoa2);
 
-        Pessoa pessoa1 = pessoaRepository.findById(idPessoa1);
-        assertThat(pessoa1).isNotNull();
+        BuscarPessoa.Output outputPessoa1 = buscarPessoa.execute(idPessoa1);
+        assertThat(outputPessoa1).isNotNull();
 
-        Throwable throwable = catchThrowable(() -> pessoaRepository.findById(idPessoa2));
+        Throwable throwable = catchThrowable(() -> buscarPessoa.execute(idPessoa2));
         assertThat(throwable).isInstanceOf(PessoaNotFoundException.class);
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + idPessoa2);
     }
 
-    private UUID criarPessoa(String cpf, PessoaRepository pessoaRepository) {
-        ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        UUID id = UUID.randomUUID();
-        pessoaRepository.save(Pessoa.of(
-                id,
-                NOME_DEFAULT,
-                cpf,
-                DATA_DE_NASCIMENTO_DEFAULT,
-                applicationClock
-        ));
-        return id;
+    private UUID criarPessoaDefaultParaAlteracoes(CriarPessoa.Input input) {
+        CriarPessoa.Output output = criarPessoa.execute(input);
+        assertThat(output).isNotNull();
+        return output.id();
     }
 }
