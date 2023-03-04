@@ -26,11 +26,13 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 * Implementar o front-end para consumir a API.Desejável que seja em ReactJS ou Angular
 * Publicar a aplicação na internet utilizando algum provedor, para que possa ser acessado sem necessidade de rodar o projeto local
 
-### VM Args
+### Required VM Args
 * -Dspring.profiles.active=prod -> (dev, prod)
+* -Dspring.datasource.url=jdbc:postgresql://#####:5432/exercicio-tecnico-elotech -> postgres host
+* -Dspring.datasource.username=#####
+* -Dspring.datasource.password=#####
 
 ### Itens Pendendes
-* Os dados devem ser persistidos utilizando um banco de dados relacional.
 * Testar api de contatos
 * Criar VOs de contatos
 * Formatação do telefone

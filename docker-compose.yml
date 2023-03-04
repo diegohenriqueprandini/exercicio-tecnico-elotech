@@ -1,0 +1,66 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.2-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+      POSTGRES_DB: exercicio-tecnico-elotech
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - exercicio-tecnico-elotech
+    hostname: postgres
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:6.20
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: contato.diego.prandini@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_LISTEN_PORT: 80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    networks:
+      - exercicio-tecnico-elotech
+    hostname: pgadmin
+    depends_on:
+      - postgres
+
+  exercicio-tecnico-elotech:
+    container_name: exercicio-tecnico-elotech
+    image: exercicio-tecnico-elotech:latest
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      JAVA_TOOL_OPTIONS: >
+        -Dserver.port=8080
+        -Dspring.profiles.active=dev
+        -Dspring.datasource.url=jdbc:postgresql://postgres:5432/exercicio-tecnico-elotech
+        -Dspring.datasource.username=postgres
+        -Dspring.datasource.password=postgres
+    networks:
+      - exercicio-tecnico-elotech
+    hostname: exercicio-tecnico-elotech
+    depends_on:
+      - postgres
+
+networks:
+  exercicio-tecnico-elotech:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

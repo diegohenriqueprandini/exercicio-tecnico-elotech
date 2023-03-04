@@ -1,9 +1,11 @@
-package com.diego.prandini.exerciciotecnicoelotech.infra.repository.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
+@ConditionalOnProperty(value = "application.inject.repository", havingValue = "memory")
 public class PessoaRepositoryMemory implements PessoaRepository {
 
     private final List<Pessoa> data = new ArrayList<>();
@@ -58,7 +61,7 @@ public class PessoaRepositoryMemory implements PessoaRepository {
                 .filter(item -> item.getCpf().equals(cpf))
                 .toList();
         if (dadoCpf.size() > 1)
-            throw new RuntimeException("Cpf inconsistente: " + cpf.get());
+            throw new CpfJaExisteException(cpf.get());
         return dadoCpf.stream().findFirst();
     }
 }

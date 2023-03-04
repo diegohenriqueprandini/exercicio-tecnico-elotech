@@ -11,6 +11,10 @@ spring:
     show-sql: false
     hibernate:
       format_sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/exercicio-tecnico-elotech
+    username: postgres
+    password: ########
 
 springdoc:
   api-docs:
@@ -30,3 +34,7 @@ management:
   endpoint:
     health:
       show-details: always
+
+application:
+  inject:
+    repository: database

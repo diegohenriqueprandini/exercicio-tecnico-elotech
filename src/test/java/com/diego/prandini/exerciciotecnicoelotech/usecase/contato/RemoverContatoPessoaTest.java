@@ -8,7 +8,7 @@ import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
-import com.diego.prandini.exerciciotecnicoelotech.infra.repository.pessoa.PessoaRepositoryMemory;
+import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
 import org.junit.jupiter.api.BeforeEach;

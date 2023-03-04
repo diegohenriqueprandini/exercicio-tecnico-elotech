@@ -5,7 +5,7 @@ server:
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: dev
 
   jpa:
     show-sql: true
@@ -21,6 +21,17 @@ springdoc:
 logging:
   level:
     root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: always
 
 application:
   inject:

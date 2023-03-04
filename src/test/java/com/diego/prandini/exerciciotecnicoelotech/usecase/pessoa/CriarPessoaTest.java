@@ -10,7 +10,7 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoFuturaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVaziaException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
-import com.diego.prandini.exerciciotecnicoelotech.infra.repository.pessoa.PessoaRepositoryMemory;
+import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.DateUtils;
