@@ -1,5 +1,6 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;

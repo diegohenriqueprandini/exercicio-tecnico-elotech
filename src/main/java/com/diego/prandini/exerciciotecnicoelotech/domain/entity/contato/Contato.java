@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato;
 
 import com.diego.prandini.exerciciotecnicoelotech.exception.EmailInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.EmailVazioException;

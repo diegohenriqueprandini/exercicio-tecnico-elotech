@@ -1,9 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Contato;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.DataDeNascimento;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;

@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.contato;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Contato;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

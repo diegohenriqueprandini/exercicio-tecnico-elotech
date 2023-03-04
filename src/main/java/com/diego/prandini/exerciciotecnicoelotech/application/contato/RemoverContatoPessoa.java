@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.application.contato;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;

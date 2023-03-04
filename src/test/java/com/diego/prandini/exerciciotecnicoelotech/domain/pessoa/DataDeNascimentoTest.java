@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
 import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoFuturaException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;

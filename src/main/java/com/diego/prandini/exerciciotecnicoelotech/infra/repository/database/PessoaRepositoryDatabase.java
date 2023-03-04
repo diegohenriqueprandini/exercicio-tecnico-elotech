@@ -1,10 +1,10 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository.database;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Contato;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;

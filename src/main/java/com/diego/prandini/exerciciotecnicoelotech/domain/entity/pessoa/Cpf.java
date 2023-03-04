@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfVazioException;

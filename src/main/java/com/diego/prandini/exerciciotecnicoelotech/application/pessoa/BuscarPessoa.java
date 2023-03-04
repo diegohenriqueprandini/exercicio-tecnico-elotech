@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import lombok.RequiredArgsConstructor;

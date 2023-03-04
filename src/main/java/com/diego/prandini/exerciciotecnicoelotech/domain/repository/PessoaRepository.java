@@ -1,8 +1,8 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.repository;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 
 import java.util.Optional;
 import java.util.UUID;

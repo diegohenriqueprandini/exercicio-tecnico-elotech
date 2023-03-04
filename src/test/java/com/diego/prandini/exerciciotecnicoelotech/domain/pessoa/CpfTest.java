@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.domain.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfInvalidoException;
 import org.junit.jupiter.api.Test;
 
