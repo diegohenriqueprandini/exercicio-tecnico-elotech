@@ -3,15 +3,18 @@ package com.diego.prandini.exerciciotecnicoelotech.infra.repository.database;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Contato;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,10 +57,13 @@ public class PessoaRepositoryDatabase implements PessoaRepository {
     }
 
     @Override
-    public List<Pessoa> findAll() {
-        return pessoaJpaRepository.findAll().stream()
-                .map(this::toPessoa)
-                .toList();
+    public EntityPage<Pessoa> findAll(int page, int size) {
+        Page<PessoaTable> pessoas = pessoaJpaRepository.findAll(PageRequest.of(page, size, Sort.by("nome")));
+        return new EntityPage<>(
+                pessoas.map(this::toPessoa).toList(),
+                pessoas.getTotalPages(),
+                pessoas.getNumber()
+        );
     }
 
     @Override

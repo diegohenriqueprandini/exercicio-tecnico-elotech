@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -31,8 +32,15 @@ public class PessoaController {
     private final RemoverPessoa removerPessoa;
 
     @GetMapping
-    public ResponseEntity<ListarPessoas.Output> listar() {
-        ListarPessoas.Output output = listarPessoas.execute();
+    public ResponseEntity<ListarPessoas.Output> listar(
+            @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "15") Integer size
+    ) {
+        ListarPessoas.PaginationInput paginationInput = new ListarPessoas.PaginationInput(page, size);
+        ListarPessoas.Input input = new ListarPessoas.Input(
+                paginationInput
+        );
+        ListarPessoas.Output output = listarPessoas.execute(input);
         return ResponseEntity.ok(output);
     }
 

@@ -1,6 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
@@ -51,8 +52,9 @@ public class PessoaRepositoryMemory implements PessoaRepository {
     }
 
     @Override
-    public List<Pessoa> findAll() {
-        return List.copyOf(data);
+    public EntityPage<Pessoa> findAll(int page, int size) {
+        List<Pessoa> pessoas = List.copyOf(data);
+        return new EntityPage<>(pessoas, 1, 0);
     }
 
     @Override

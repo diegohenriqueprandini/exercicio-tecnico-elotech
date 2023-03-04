@@ -1,7 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.exception.InputNuloException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,26 +17,51 @@ public class ListarPessoas {
 
     private final PessoaRepository pessoaRepository;
 
-    public Output execute() {
-        List<Pessoa> pessoas = pessoaRepository.findAll();
+    public Output execute(Input input) {
+        validarInput(input);
+        EntityPage<Pessoa> pessoas = pessoaRepository.findAll(input.pagination.page, input.pagination.size);
         return toOutput(pessoas);
     }
 
-    private Output toOutput(List<Pessoa> pessoas) {
-        List<PessoaOutput> pessoasOutput = pessoas.stream()
+    private void validarInput(Input input) {
+        if (input == null)
+            throw new InputNuloException();
+        if (input.pagination == null)
+            throw new InputNuloException();
+    }
+
+    private Output toOutput(EntityPage<Pessoa> pessoas) {
+        List<PessoaOutput> pessoasOutput = pessoas.getItems().stream()
                 .map(item -> new PessoaOutput(
                         item.getId(),
                         item.getNome(),
                         item.getCpf().get(),
                         item.getDataDeNascimento().get()
                 )).toList();
+        PaginationOutput paginationOutput = new PaginationOutput(
+                pessoas.getTotalPages(),
+                pessoas.getPageNumber()
+        );
         return new Output(
-                pessoasOutput
+                pessoasOutput,
+                paginationOutput
         );
     }
 
+    public record Input(
+            PaginationInput pagination
+    ) {
+    }
+
+    public record PaginationInput(
+            int page,
+            int size
+    ) {
+    }
+
     public record Output(
-            List<PessoaOutput> pessoas
+            List<PessoaOutput> pessoas,
+            PaginationOutput pagination
     ) {
     }
 
@@ -43,6 +70,12 @@ public class ListarPessoas {
             String nome,
             String cpf,
             LocalDate dataDeNascimento
+    ) {
+    }
+
+    public record PaginationOutput(
+            int totalPages,
+            int pageNumber
     ) {
     }
 }
