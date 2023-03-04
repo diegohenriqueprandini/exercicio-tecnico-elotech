@@ -33,14 +33,14 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 * frontend
 * deploy
 
-### Required to start locally
+### Obrigatório para subir local
 * Java 17
 * Docker
 * Docker Compose
 
-### Required to start in production 
+### Obrigatório para subir em produção 
 * Java 17
-* Postgres
+* Postgres server
 
 ### Required java VM Args
 * -Dspring.profiles.active=prod -> (dev, prod)
@@ -48,8 +48,8 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 * -Dspring.datasource.username=#####
 * -Dspring.datasource.password=#####
 
-### Start application locally
+### Subir local para desenvolvimento
 * ./start.sh
 
-### Stop application locally
+### Stopt local para desenvolvimento
 * ./stop.sh
