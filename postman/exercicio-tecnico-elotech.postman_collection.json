@@ -28,13 +28,31 @@
 					"response": []
 				},
 				{
+					"name": "Listar Pessoas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/pessoas",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pessoas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Criar Pessoa",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Diego H Prandini\",\n    \"cpf\": \"42572859238\",\n    \"dataDeNascimento\": \"1991-11-25\",\n    \"contatos\": [\n        {\n            \"nome\" : \"Mae\",\n            \"telefone\": \"44999999999\",\n            \"email\": \"diego@gmail.com\"\n        }\n    ]\n}",
+							"raw": "{\n    \"nome\": \"Diego H Prandini\",\n    \"cpf\": \"61478762608\",\n    \"dataDeNascimento\": \"1991-11-25\",\n    \"contatos\": [\n        {\n            \"nome\" : \"Mae\",\n            \"telefone\": \"44999999999\",\n            \"email\": \"diego@gmail.com\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -88,14 +106,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/pessoas/8b5f13dc-95ac-46b6-8fa7-0cb777511af9",
+							"raw": "localhost:8080/pessoas/007f1d78-75af-4103-bca1-189afbfd0f1b",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"pessoas",
-								"8b5f13dc-95ac-46b6-8fa7-0cb777511af9"
+								"007f1d78-75af-4103-bca1-189afbfd0f1b"
 							]
 						}
 					},
@@ -112,14 +130,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/pessoas/6d6b79f3-69cd-436f-8ddf-eb29accd83e2/contatos",
+							"raw": "localhost:8080/pessoas/9b515e76-9039-4ecc-92ec-0749e2ecb86e/contatos",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"pessoas",
-								"6d6b79f3-69cd-436f-8ddf-eb29accd83e2",
+								"9b515e76-9039-4ecc-92ec-0749e2ecb86e",
 								"contatos"
 							]
 						}
@@ -132,16 +150,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/pessoas/bc0c9bae-eedd-4da3-8753-10a3eb1a09da/contatos/8b5f13dc-95ac-46b6-8fa7-0cb777511af9",
+							"raw": "localhost:8080/pessoas/cfecee0c-e50c-40f3-801e-f95dbf54b91c/contatos/ae89eb1e-c932-4731-867c-bf5349f18131",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"pessoas",
-								"bc0c9bae-eedd-4da3-8753-10a3eb1a09da",
+								"cfecee0c-e50c-40f3-801e-f95dbf54b91c",
 								"contatos",
-								"8b5f13dc-95ac-46b6-8fa7-0cb777511af9"
+								"ae89eb1e-c932-4731-867c-bf5349f18131"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Contato",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/pessoas/f706b1dc-fe27-4f34-a140-ca7bc82fa50f/contatos/f706b1dc-fe27-4f34-a140-ca7bc82fa50f",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pessoas",
+								"f706b1dc-fe27-4f34-a140-ca7bc82fa50f",
+								"contatos",
+								"f706b1dc-fe27-4f34-a140-ca7bc82fa50f"
 							]
 						}
 					},
@@ -162,15 +201,45 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/pessoas/6d6b79f3-69cd-436f-8ddf-eb29accd83e2/contatos",
+							"raw": "localhost:8080/pessoas/cfecee0c-e50c-40f3-801e-f95dbf54b91c/contatos",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"pessoas",
-								"6d6b79f3-69cd-436f-8ddf-eb29accd83e2",
+								"cfecee0c-e50c-40f3-801e-f95dbf54b91c",
 								"contatos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alterar Contato",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "        {\n            \"nome\": \"Mae_alterado\",\n            \"telefone\": \"44988888888\",\n            \"email\": \"diego-alterado@gmail.com\"\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/pessoas/9b515e76-9039-4ecc-92ec-0749e2ecb86e/contatos/c0cf8296-6860-4817-80f9-94812dd4f500",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pessoas",
+								"9b515e76-9039-4ecc-92ec-0749e2ecb86e",
+								"contatos",
+								"c0cf8296-6860-4817-80f9-94812dd4f500"
 							]
 						}
 					},

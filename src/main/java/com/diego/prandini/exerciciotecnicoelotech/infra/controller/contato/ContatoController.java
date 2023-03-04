@@ -45,7 +45,7 @@ public class ContatoController {
     @PostMapping
     public ResponseEntity<AdicionarContatoPessoa.Output> adicionar(@PathVariable UUID idPessoa, @RequestBody AdicionarContatoPessoa.Input input) {
         AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoa, input);
-        String resource = String.format("/pessoas/%s/contatos/%s", output.pessoa().id(), output.contato().id());
+        String resource = String.format("/pessoas/%s/contatos", output.pessoa().id());
         return ResponseEntity.created(ApiUtils.createUri(output.contato().id(), resource)).body(output);
     }
 
