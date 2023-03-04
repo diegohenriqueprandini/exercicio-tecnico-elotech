@@ -30,8 +30,9 @@ Criar uma API Rest de um cadastro de Pessoas, utilizando Spring Boot e Java
 * Testar api de contatos
 * Criar VOs de contatos
 * Formatação do telefone
-* frontend
-* deploy
+* frontend (parcial)
+* deploy (nao deu tempo)
+* bug referente a consistencia dos contatos da pessoa, ao editar pelo frontend
 
 ### Obrigatório para subir local
 * Java 17
