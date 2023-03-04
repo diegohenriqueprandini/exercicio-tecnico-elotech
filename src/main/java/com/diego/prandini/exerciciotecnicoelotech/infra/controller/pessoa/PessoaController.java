@@ -34,12 +34,13 @@ public class PessoaController {
     @GetMapping
     public ResponseEntity<ListarPessoas.Output> listar(
             @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = "15") Integer size
+            @RequestParam(name = "size", required = false, defaultValue = "15") Integer size,
+            @RequestParam(name = "nome", required = false, defaultValue = "") String nome,
+            @RequestParam(name = "cpf", required = false, defaultValue = "") String cpf
     ) {
         ListarPessoas.PaginationInput paginationInput = new ListarPessoas.PaginationInput(page, size);
-        ListarPessoas.Input input = new ListarPessoas.Input(
-                paginationInput
-        );
+        ListarPessoas.FilterInput filterInput = new ListarPessoas.FilterInput(nome, cpf);
+        ListarPessoas.Input input = new ListarPessoas.Input(paginationInput, filterInput);
         ListarPessoas.Output output = listarPessoas.execute(input);
         return ResponseEntity.ok(output);
     }

@@ -6,6 +6,7 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
+import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -52,9 +53,15 @@ public class PessoaRepositoryMemory implements PessoaRepository {
     }
 
     @Override
-    public EntityPage<Pessoa> findAll(int page, int size) {
-        List<Pessoa> pessoas = List.copyOf(data);
-        return new EntityPage<>(pessoas, 1, 0);
+    public EntityPage<Pessoa> findAll(int page, int size, String nome, Cpf cpf) {
+        return new EntityPage<>(
+                data.stream()
+                        .filter(item -> StringUtils.isBlank(nome) || item.getNome().contains(nome))
+                        .filter(item -> cpf == null || item.getNome().contains(nome))
+                        .toList(),
+                1,
+                0
+        );
     }
 
     @Override

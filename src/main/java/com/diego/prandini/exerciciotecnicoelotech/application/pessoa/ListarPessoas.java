@@ -1,9 +1,11 @@
 package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.InputNuloException;
+import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,12 @@ public class ListarPessoas {
 
     public Output execute(Input input) {
         validarInput(input);
-        EntityPage<Pessoa> pessoas = pessoaRepository.findAll(input.pagination.page, input.pagination.size);
+        EntityPage<Pessoa> pessoas = pessoaRepository.findAll(
+                input.pagination.page,
+                input.pagination.size,
+                input.filter.nome,
+                StringUtils.isBlank(input.filter.cpf) ? null : new Cpf(input.filter.cpf)
+        );
         return toOutput(pessoas);
     }
 
@@ -27,6 +34,8 @@ public class ListarPessoas {
         if (input == null)
             throw new InputNuloException();
         if (input.pagination == null)
+            throw new InputNuloException();
+        if (input.filter == null)
             throw new InputNuloException();
     }
 
@@ -49,13 +58,20 @@ public class ListarPessoas {
     }
 
     public record Input(
-            PaginationInput pagination
+            PaginationInput pagination,
+            FilterInput filter
     ) {
     }
 
     public record PaginationInput(
             int page,
             int size
+    ) {
+    }
+
+    public record FilterInput(
+            String nome,
+            String cpf
     ) {
     }
 

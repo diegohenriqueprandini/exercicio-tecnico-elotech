@@ -15,7 +15,7 @@ public interface PessoaRepository {
 
     void remove(Pessoa pessoa);
 
-    EntityPage<Pessoa> findAll(int page, int size);
+    EntityPage<Pessoa> findAll(int page, int size, String nome, Cpf cpf);
 
     Optional<Pessoa> findByCpf(Cpf cpf);
 }
