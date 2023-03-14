@@ -28,11 +28,6 @@ public class AdicionarContatoPessoaTest {
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
     private static final String EMAIL_DEFAULT = "contato@email.com";
-    private static final List<CriarPessoa.ContatoInput> CONTATOS_DEFAULT = List.of(new CriarPessoa.ContatoInput(
-            CONTATO_DEFAULT,
-            TELEFONE_DEFAULT,
-            EMAIL_DEFAULT
-    ));
 
     private static final String NOVO_CONTATO_DEFAULT = "Contato2";
     private static final String NOVO_TELEFONE_DEFAULT = "44911223344";
@@ -50,7 +45,7 @@ public class AdicionarContatoPessoaTest {
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
         adicionarContatoPessoa = new AdicionarContatoPessoa(pessoaRepository);
         buscarContatoPessoa = new BuscarContatoPessoa(pessoaRepository);
-        idPessoaDefault = criarPessoaParaAlteracoes();
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes();
     }
 
     @Test
@@ -75,15 +70,17 @@ public class AdicionarContatoPessoaTest {
         assertThat(outputBuscar.contato().email()).isEqualTo(NOVO_EMAIL_DEFAULT);
     }
 
-    private UUID criarPessoaParaAlteracoes() {
-        CriarPessoa.Input input = new CriarPessoa.Input(
+    private UUID criarPessoaDefaultParaAlteracoes() {
+        return criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
-                CONTATOS_DEFAULT
-        );
-        CriarPessoa.Output output = criarPessoa.execute(input);
-        assertThat(output).isNotNull();
-        return output.id();
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
+        )).id();
     }
 }

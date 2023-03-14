@@ -33,11 +33,6 @@ public class RemoverContatoPessoaTest {
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
     private static final String EMAIL_DEFAULT = "contato@email.com";
-    private static final List<CriarPessoa.ContatoInput> CONTATOS_DEFAULT = List.of(new CriarPessoa.ContatoInput(
-            CONTATO_DEFAULT,
-            TELEFONE_DEFAULT,
-            EMAIL_DEFAULT
-    ));
 
     private static final String NOVO_CONTATO_DEFAULT = "Contato2";
     private static final String NOVO_TELEFONE_DEFAULT = "44911223344";
@@ -47,6 +42,7 @@ public class RemoverContatoPessoaTest {
     private AdicionarContatoPessoa adicionarContatoPessoa;
     private RemoverContatoPessoa removerContatoPessoa;
     private BuscarContatoPessoa buscarContatoPessoa;
+    private ListarContatosPessoa listarContatosPessoa;
     private UUID idPessoaDefault;
     private UUID idContatoDefault;
 
@@ -54,18 +50,22 @@ public class RemoverContatoPessoaTest {
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-        ListarContatosPessoa listarContatosPessoa = new ListarContatosPessoa(pessoaRepository);
+        listarContatosPessoa = new ListarContatosPessoa(pessoaRepository);
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
         adicionarContatoPessoa = new AdicionarContatoPessoa(pessoaRepository);
         removerContatoPessoa = new RemoverContatoPessoa(pessoaRepository);
         buscarContatoPessoa = new BuscarContatoPessoa(pessoaRepository);
-        idPessoaDefault = criarPessoaParaAlteracoes();
-        idContatoDefault = listarContatosPessoa.execute(idPessoaDefault).contatos().stream().findFirst().orElseThrow(ContatosVazioException::new).id();
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes();
+        idContatoDefault = buscarContatoDefaultParaAlteracoes();
     }
 
     @Test
     void deveRemoverContatoDePessoaComPeloMenosDoisContatos() {
-        UUID idContatoNovo = adicionarContatoPessoa();
+        UUID idContatoNovo = adicionarContatoPessoa.execute(idPessoaDefault, new AdicionarContatoPessoa.Input(
+                NOVO_CONTATO_DEFAULT,
+                NOVO_TELEFONE_DEFAULT,
+                NOVO_EMAIL_DEFAULT
+        )).contato().id();
 
         removerContatoPessoa.execute(idPessoaDefault, idContatoNovo);
 
@@ -90,25 +90,24 @@ public class RemoverContatoPessoaTest {
         assertThat(output.contato().email()).isEqualTo(EMAIL_DEFAULT);
     }
 
-    private UUID criarPessoaParaAlteracoes() {
-        CriarPessoa.Input input = new CriarPessoa.Input(
+    private UUID criarPessoaDefaultParaAlteracoes() {
+        return criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
-                CONTATOS_DEFAULT
-        );
-        CriarPessoa.Output output = criarPessoa.execute(input);
-        assertThat(output).isNotNull();
-        return output.id();
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
+        )).id();
     }
 
-    private UUID adicionarContatoPessoa() {
-        AdicionarContatoPessoa.Output output = adicionarContatoPessoa.execute(idPessoaDefault, new AdicionarContatoPessoa.Input(
-                NOVO_CONTATO_DEFAULT,
-                NOVO_TELEFONE_DEFAULT,
-                NOVO_EMAIL_DEFAULT
-        ));
-        assertThat(output.contato().id()).isNotNull();
-        return output.contato().id();
+    private UUID buscarContatoDefaultParaAlteracoes() {
+        return listarContatosPessoa.execute(idPessoaDefault)
+                .contatos().stream()
+                .findFirst()
+                .orElseThrow(ContatosVazioException::new).id();
     }
 }

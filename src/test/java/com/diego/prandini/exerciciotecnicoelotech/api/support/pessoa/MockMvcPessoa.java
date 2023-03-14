@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,7 +37,8 @@ public class MockMvcPessoa {
     public BuscarPessoa.Output doGetPessoa(UUID id) throws Exception {
         MockMvcHandler<BuscarPessoa.Output> handler = new MockMvcHandler<>(new TypeReference<>() {
         });
-        mockMvc.perform(get("/pessoas/{id}", id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pessoas/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -45,7 +49,8 @@ public class MockMvcPessoa {
     public ControllerErrorData doGetPessoaError(UUID id, ResultMatcher status) throws Exception {
         MockMvcHandler<ControllerErrorData> handler = new MockMvcHandler<>(new TypeReference<>() {
         });
-        mockMvc.perform(get("/pessoas/{id}", id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pessoas/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status)
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -56,8 +61,9 @@ public class MockMvcPessoa {
     public CriarPessoa.Output doPostPessoa(CriarPessoa.Input input) throws Exception {
         MockMvcHandler<CriarPessoa.Output> handler = new MockMvcHandler<>(new TypeReference<>() {
         });
-        String json = JsonUtils.toJson(input);
-        mockMvc.perform(post("/pessoas").contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(post("/pessoas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.toJson(input)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -69,8 +75,9 @@ public class MockMvcPessoa {
     public AlterarPessoa.Output doPutPessoa(UUID id, AlterarPessoa.Input input) throws Exception {
         MockMvcHandler<AlterarPessoa.Output> handler = new MockMvcHandler<>(new TypeReference<>() {
         });
-        String json = JsonUtils.toJson(input);
-        mockMvc.perform(put("/pessoas/{id}", id).contentType(MediaType.APPLICATION_JSON).content(json))
+        mockMvc.perform(put("/pessoas/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtils.toJson(input)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -79,8 +86,25 @@ public class MockMvcPessoa {
     }
 
     public void doDeletePessoa(UUID id) throws Exception {
-        mockMvc.perform(delete("/pessoas/{id}", id).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/pessoas/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$").doesNotExist());
+    }
+
+    public UUID criarPessoaParaAlteracoes(String nome, String cpf, LocalDate dataDeNascimento, String nomeContato, String telefone, String email) throws Exception {
+        CriarPessoa.Output output = doPostPessoa(new CriarPessoa.Input(
+                nome,
+                cpf,
+                dataDeNascimento,
+                List.of(new CriarPessoa.ContatoInput(
+                        nomeContato,
+                        telefone,
+                        email
+
+                ))
+        ));
+        assertThat(output).isNotNull();
+        return output.id();
     }
 }

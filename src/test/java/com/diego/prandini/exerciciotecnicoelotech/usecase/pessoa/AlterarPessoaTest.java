@@ -53,17 +53,7 @@ public class AlterarPessoaTest {
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
         alterarPessoa = new AlterarPessoa(pessoaRepository, applicationClock);
         buscarPessoa = new BuscarPessoa(pessoaRepository);
-        idPessoaDefault = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
-                NOME_DEFAULT,
-                CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT,
-                List.of(new CriarPessoa.ContatoInput(
-                        CONTATO_DEFAULT,
-                        TELEFONE_DEFAULT,
-                        EMAIL_DEFAULT
-
-                ))
-        ));
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes();
     }
 
     @Test
@@ -230,7 +220,7 @@ public class AlterarPessoaTest {
 
     @Test
     void naoPodeAlterarCpfParaUmJaExistente() {
-        criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
+        criarPessoa.execute(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 "98841337273",
                 DATA_DE_NASCIMENTO_DEFAULT,
@@ -255,9 +245,17 @@ public class AlterarPessoaTest {
         assertThat(throwable.getMessage()).isEqualTo("Cpf já existe: 98841337273");
     }
 
-    private UUID criarPessoaDefaultParaAlteracoes(CriarPessoa.Input input) {
-        CriarPessoa.Output output = criarPessoa.execute(input);
-        assertThat(output).isNotNull();
-        return output.id();
+    private UUID criarPessoaDefaultParaAlteracoes() {
+        return criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
+        )).id();
     }
 }

@@ -3,7 +3,6 @@ package com.diego.prandini.exerciciotecnicoelotech.api.pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.AlterarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +42,14 @@ public class AlterarPessoaApiTest {
 
     @BeforeEach
     void setup() throws Exception {
-        idPessoaDefault = criarPessoaParaAlteracoes();
+        idPessoaDefault = mockMvcPessoa.criarPessoaParaAlteracoes(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                CONTATO_DEFAULT,
+                TELEFONE_DEFAULT,
+                EMAIL_DEFAULT
+        );
     }
 
     @Test
@@ -67,21 +72,5 @@ public class AlterarPessoaApiTest {
         assertThat(outputBuscar.nome()).isEqualTo(NOVO_NOME_DEFAULT);
         assertThat(outputBuscar.cpf()).isEqualTo(NOVO_CPF_DEFAULT);
         assertThat(outputBuscar.dataDeNascimento()).isEqualTo(NOVO_DATA_DE_NASCIMENTO_DEFAULT);
-    }
-
-    private UUID criarPessoaParaAlteracoes() throws Exception {
-        CriarPessoa.Output output = mockMvcPessoa.doPostPessoa(new CriarPessoa.Input(
-                NOME_DEFAULT,
-                CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT,
-                List.of(new CriarPessoa.ContatoInput(
-                        CONTATO_DEFAULT,
-                        TELEFONE_DEFAULT,
-                        EMAIL_DEFAULT
-
-                ))
-        ));
-        assertThat(output).isNotNull();
-        return output.id();
     }
 }

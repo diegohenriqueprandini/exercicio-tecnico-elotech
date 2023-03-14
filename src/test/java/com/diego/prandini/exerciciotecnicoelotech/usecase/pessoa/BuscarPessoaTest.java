@@ -40,17 +40,7 @@ public class BuscarPessoaTest {
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
         buscarPessoa = new BuscarPessoa(pessoaRepository);
-        idPessoaDefault = criarPessoaDefaultParaAlteracoes(new CriarPessoa.Input(
-                NOME_DEFAULT,
-                CPF_DEFAULT,
-                DATA_DE_NASCIMENTO_DEFAULT,
-                List.of(new CriarPessoa.ContatoInput(
-                        CONTATO_DEFAULT,
-                        TELEFONE_DEFAULT,
-                        EMAIL_DEFAULT
-
-                ))
-        ));
+        idPessoaDefault = criarPessoaDefaultParaAlteracoes();
     }
 
     @Test
@@ -73,9 +63,17 @@ public class BuscarPessoaTest {
         assertThat(throwable.getMessage()).isEqualTo("Pessoa não encontrada: " + id);
     }
 
-    private UUID criarPessoaDefaultParaAlteracoes(CriarPessoa.Input input) {
-        CriarPessoa.Output output = criarPessoa.execute(input);
-        assertThat(output).isNotNull();
-        return output.id();
+    private UUID criarPessoaDefaultParaAlteracoes() {
+        return criarPessoa.execute(new CriarPessoa.Input(
+                NOME_DEFAULT,
+                CPF_DEFAULT,
+                DATA_DE_NASCIMENTO_DEFAULT,
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+
+                ))
+        )).id();
     }
 }
