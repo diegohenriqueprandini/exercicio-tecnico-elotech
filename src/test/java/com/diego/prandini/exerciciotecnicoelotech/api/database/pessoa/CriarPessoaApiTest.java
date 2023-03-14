@@ -1,8 +1,8 @@
-package com.diego.prandini.exerciciotecnicoelotech.api.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.api.database.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import org.junit.jupiter.api.BeforeEach;
+import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,15 +12,15 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.UUID;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("dbtest")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class BuscarPessoaApiTest {
+public class CriarPessoaApiTest {
 
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
@@ -33,28 +33,30 @@ public class BuscarPessoaApiTest {
     @Autowired
     private MockMvcPessoa mockMvcPessoa;
 
-    private UUID idPessoaDefault;
-
-    @BeforeEach
-    void setup() throws Exception {
-        idPessoaDefault = mockMvcPessoa.criarPessoaParaAlteracoes(
+    @Test
+    void deveCriarPessoa() throws Exception {
+        CriarPessoa.Output output = mockMvcPessoa.doPostPessoa(new CriarPessoa.Input(
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
-                CONTATO_DEFAULT,
-                TELEFONE_DEFAULT,
-                EMAIL_DEFAULT
-        );
-    }
-
-    @Test
-    void deveBuscarPessoaPeloId() throws Exception {
-        BuscarPessoa.Output output = mockMvcPessoa.doGetPessoa(idPessoaDefault);
+                List.of(new CriarPessoa.ContatoInput(
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+                ))
+        ));
 
         assertThat(output).isNotNull();
         assertThat(output.id()).isNotNull();
         assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
         assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
         assertThat(output.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
+
+        BuscarPessoa.Output outputBuscar = mockMvcPessoa.doGetPessoa(output.id());
+        assertThat(outputBuscar).isNotNull();
+        assertThat(outputBuscar.id()).isEqualTo(output.id());
+        assertThat(outputBuscar.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(outputBuscar.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(outputBuscar.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 }

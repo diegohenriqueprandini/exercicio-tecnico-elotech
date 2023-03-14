@@ -1,7 +1,7 @@
-package com.diego.prandini.exerciciotecnicoelotech.api.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.api.memory.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.infra.controller.ControllerErrorData;
+import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,20 +9,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class RemoverPessoaApiTest {
+public class BuscarPessoaApiTest {
 
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
@@ -50,14 +48,13 @@ public class RemoverPessoaApiTest {
     }
 
     @Test
-    void deveRemoverPessoaPeloId() throws Exception {
-        mockMvcPessoa.doDeletePessoa(idPessoaDefault);
+    void deveBuscarPessoaPeloId() throws Exception {
+        BuscarPessoa.Output output = mockMvcPessoa.doGetPessoa(idPessoaDefault);
 
-        ResultMatcher notFound = status().isNotFound();
-        ControllerErrorData output = mockMvcPessoa.doGetPessoaError(idPessoaDefault, notFound);
         assertThat(output).isNotNull();
-        assertThat(output.getTimestamp()).isNotNull();
-        assertThat(output.getMessage()).isEqualTo("Pessoa não encontrada: " + idPessoaDefault);
-        assertThat(output.getDetail()).isEqualTo("method=GET,uri=/pessoas/" + idPessoaDefault);
+        assertThat(output.id()).isNotNull();
+        assertThat(output.nome()).isEqualTo(NOME_DEFAULT);
+        assertThat(output.cpf()).isEqualTo(CPF_DEFAULT);
+        assertThat(output.dataDeNascimento()).isEqualTo(DATA_DE_NASCIMENTO_DEFAULT);
     }
 }

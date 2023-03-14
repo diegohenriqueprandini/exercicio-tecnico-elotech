@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.api.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.api.memory.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
