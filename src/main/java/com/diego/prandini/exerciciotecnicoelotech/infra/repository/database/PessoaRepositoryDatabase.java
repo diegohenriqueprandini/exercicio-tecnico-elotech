@@ -97,7 +97,7 @@ public class PessoaRepositoryDatabase implements PessoaRepository {
                         item.getNome(),
                         item.getTelefone(),
                         item.getEmail()
-                )).forEach(builder::contatos);
+                )).forEach(builder::adicionarContato);
         return builder.build();
     }
 }

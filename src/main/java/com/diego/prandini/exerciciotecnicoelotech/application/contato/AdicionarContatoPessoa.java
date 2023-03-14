@@ -35,13 +35,12 @@ public class AdicionarContatoPessoa {
 
     private UUID adicionarContato(Pessoa pessoa, Input input) {
         UUID id = UUID.randomUUID();
-        Contato contato = new Contato(
+        pessoa.adicionarContato(new Contato(
                 id,
                 input.nome,
                 input.telefone,
                 input.email
-        );
-        pessoa.adicionarContato(contato);
+        ));
         return id;
     }
 

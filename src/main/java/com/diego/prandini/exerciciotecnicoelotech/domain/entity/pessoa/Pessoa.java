@@ -66,8 +66,6 @@ public class Pessoa {
     public void adicionarContato(Contato contato) {
         if (contato == null)
             throw new ContatoNuloException();
-        if (contato.getId() == null)
-            throw new ContatoNuloException();
         if (this.contatos.contains(contato))
             return;
         this.contatos.add(contato);
@@ -75,21 +73,19 @@ public class Pessoa {
 
     public void removerContato(UUID idContato) {
         if (idContato == null)
-            throw new ContatoNotFoundException(idContato);
-        Contato contato = this.contatos.stream()
+            throw new IdContatoNuloException();
+        Contato contatoFound = this.contatos.stream()
                 .filter(item -> item.getId().equals(idContato))
                 .findFirst()
                 .orElseThrow(() -> new ContatoNotFoundException(idContato));
         if (this.contatos.size() < 2)
             throw new ContatosVazioException();
-        this.contatos.remove(contato);
+        this.contatos.remove(contatoFound);
     }
 
     public void alterarContato(Contato contato) {
         if (contato == null)
             throw new ContatoNuloException();
-        if (contato.getId() == null)
-            throw new ContatoNotFoundException(null);
         Contato toUpdate = this.contatos.stream()
                 .filter(item -> item.getId().equals(contato.getId()))
                 .findFirst()
@@ -123,8 +119,9 @@ public class Pessoa {
         private final DataDeNascimento dataDeNascimento;
         private final List<Contato> contatos = new ArrayList<>();
 
-        public Builder contatos(Contato contato) {
-            contatos.add(contato);
+        public Builder adicionarContato(Contato contato) {
+            if (!contatos.contains(contato))
+                contatos.add(contato);
             return this;
         }
 

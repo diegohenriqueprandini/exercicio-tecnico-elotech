@@ -37,7 +37,7 @@ class PessoaTest {
                 new Cpf(CPF_DEFAULT),
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock)
         );
-        builder.contatos(new Contato(
+        builder.adicionarContato(new Contato(
                 UUID.randomUUID(),
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,
@@ -84,7 +84,7 @@ class PessoaTest {
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock)
         );
         UUID idContato = UUID.randomUUID();
-        builder.contatos(new Contato(
+        builder.adicionarContato(new Contato(
                 idContato,
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,
@@ -108,7 +108,7 @@ class PessoaTest {
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock)
         );
         UUID idContato = UUID.randomUUID();
-        builder.contatos(new Contato(
+        builder.adicionarContato(new Contato(
                 idContato,
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,

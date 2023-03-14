@@ -64,7 +64,8 @@ public class CriarPessoa {
                         item.nome,
                         item.telefone,
                         item.email
-                )).forEach(builder::contatos);
+                ))
+                .forEach(builder::adicionarContato);
     }
 
     private Output toOutput(Pessoa pessoa) {

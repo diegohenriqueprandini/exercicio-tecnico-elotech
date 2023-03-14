@@ -29,7 +29,9 @@ public class CpfUtils {
         String cpf = cpfSemMascara(value);
         if (CPF_INVALIDO.contains(cpf))
             return false;
-        return cpf.matches("\\d{11}") && isCpfValidoDadoDigitos(cpf.substring(0, 10)) && isCpfValidoDadoDigitos(cpf);
+        return cpf.matches("\\d{11}")
+                && isCpfValidoDadoDigitos(cpf.substring(0, 10))
+                && isCpfValidoDadoDigitos(cpf);
     }
 
     private static boolean isCpfValidoDadoDigitos(String digitos) {
