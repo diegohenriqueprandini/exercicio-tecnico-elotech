@@ -7,10 +7,17 @@ spring:
     activate:
       on-profile: dbtest
 
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
     show-sql: true
     hibernate:
       format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/exercicio-tecnico-elotech
+    username: postgres
+    password: postgres
 
 springdoc:
   api-docs:

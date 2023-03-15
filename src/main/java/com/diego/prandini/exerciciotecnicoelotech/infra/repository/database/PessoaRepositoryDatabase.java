@@ -1,16 +1,17 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository.database;
 
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
+import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryDatabaseCondition;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "application.inject.repository", havingValue = "database")
+@Conditional(RepositoryDatabaseCondition.class)
 public class PessoaRepositoryDatabase implements PessoaRepository {
 
     private final PessoaJpaRepository pessoaJpaRepository;

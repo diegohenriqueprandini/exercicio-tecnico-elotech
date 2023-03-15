@@ -1,13 +1,14 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory;
 
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
+import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryMemoryCondition;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-@ConditionalOnProperty(value = "application.inject.repository", havingValue = "memory")
+@Conditional(RepositoryMemoryCondition.class)
 public class PessoaRepositoryMemory implements PessoaRepository {
 
     private final List<Pessoa> data = new ArrayList<>();
