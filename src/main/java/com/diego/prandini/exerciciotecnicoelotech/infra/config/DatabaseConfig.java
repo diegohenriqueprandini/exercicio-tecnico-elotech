@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
@@ -17,7 +16,6 @@ import javax.sql.DataSource;
 public class DatabaseConfig {
 
     @Bean
-    @Profile("!dbtest")
     public DatabaseProperties databaseProperties(DataSourceProperties dataSourceProperties) {
         return new DatabaseProperties(
                 dataSourceProperties.getUrl(),

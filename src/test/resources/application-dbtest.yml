@@ -7,9 +7,6 @@ spring:
     activate:
       on-profile: dbtest
 
-  main:
-    allow-bean-definition-overriding: true
-
   jpa:
     show-sql: true
     hibernate:
