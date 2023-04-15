@@ -30,6 +30,7 @@ public class PessoaTable {
     private String cpf;
     @Column(name = "DATA_NASCIMENTO")
     private LocalDate dataDeNascimento;
+    private String password;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "TABLE_PESSOA_CONTATOS",

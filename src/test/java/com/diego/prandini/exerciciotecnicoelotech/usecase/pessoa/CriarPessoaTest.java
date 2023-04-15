@@ -13,6 +13,8 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
 import com.diego.prandini.exerciciotecnicoelotech.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ class CriarPessoaTest {
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
+    private static final String PASSWORD_DEFAULT = "Senha@123";
 
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
@@ -47,8 +50,9 @@ class CriarPessoaTest {
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
+        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock, passwordEncoder);
         buscarPessoa = new BuscarPessoa(pessoaRepository);
     }
 
@@ -58,6 +62,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
@@ -83,6 +88,7 @@ class CriarPessoaTest {
                     null,
                     CPF_DEFAULT,
                     DATA_DE_NASCIMENTO_DEFAULT,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -99,6 +105,7 @@ class CriarPessoaTest {
                     " ",
                     CPF_DEFAULT,
                     DATA_DE_NASCIMENTO_DEFAULT,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -115,6 +122,7 @@ class CriarPessoaTest {
                     NOME_DEFAULT,
                     null,
                     DATA_DE_NASCIMENTO_DEFAULT,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -131,6 +139,7 @@ class CriarPessoaTest {
                     NOME_DEFAULT,
                     " ",
                     DATA_DE_NASCIMENTO_DEFAULT,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -147,6 +156,7 @@ class CriarPessoaTest {
                     NOME_DEFAULT,
                     "37785134669",
                     DATA_DE_NASCIMENTO_DEFAULT,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -162,6 +172,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 "377.831.326-69",
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
@@ -180,6 +191,7 @@ class CriarPessoaTest {
                     NOME_DEFAULT,
                     CPF_DEFAULT,
                     null,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -197,6 +209,7 @@ class CriarPessoaTest {
                     NOME_DEFAULT,
                     CPF_DEFAULT,
                     dataDeNascimento,
+                    PASSWORD_DEFAULT,
                     CONTATOS_DEFAULT
             );
             criarPessoa.execute(input);
@@ -213,6 +226,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 dataDeNascimento,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         );
         CriarPessoa.Output output = criarPessoa.execute(input);
@@ -230,6 +244,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         ));
 
@@ -237,6 +252,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         )));
 
@@ -250,6 +266,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         ));
 
@@ -257,6 +274,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 "47621474602",
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATOS_DEFAULT
         ));
 
@@ -279,6 +297,7 @@ class CriarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 null
         );
 

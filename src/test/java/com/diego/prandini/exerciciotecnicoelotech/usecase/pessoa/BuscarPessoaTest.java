@@ -7,6 +7,8 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundExcept
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +27,7 @@ public class BuscarPessoaTest {
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
+    private static final String PASSWORD_DEFAULT = "Senha@123";
 
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
@@ -37,8 +40,9 @@ public class BuscarPessoaTest {
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
+        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock, passwordEncoder);
         buscarPessoa = new BuscarPessoa(pessoaRepository);
         idPessoaDefault = criarPessoaDefaultParaAlteracoes();
     }
@@ -68,11 +72,11 @@ public class BuscarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 List.of(new CriarPessoa.ContatoInput(
                         CONTATO_DEFAULT,
                         TELEFONE_DEFAULT,
                         EMAIL_DEFAULT
-
                 ))
         )).id();
     }

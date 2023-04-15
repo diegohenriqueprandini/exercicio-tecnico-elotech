@@ -92,16 +92,16 @@ public class MockMvcPessoa {
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
-    public UUID criarPessoaParaAlteracoes(String nome, String cpf, LocalDate dataDeNascimento, String nomeContato, String telefone, String email) throws Exception {
+    public UUID criarPessoaParaAlteracoes(String nome, String cpf, LocalDate dataDeNascimento, String password, String nomeContato, String telefone, String email) throws Exception {
         CriarPessoa.Output output = doPostPessoa(new CriarPessoa.Input(
                 nome,
                 cpf,
                 dataDeNascimento,
+                password,
                 List.of(new CriarPessoa.ContatoInput(
                         nomeContato,
                         telefone,
                         email
-
                 ))
         ));
         assertThat(output).isNotNull();

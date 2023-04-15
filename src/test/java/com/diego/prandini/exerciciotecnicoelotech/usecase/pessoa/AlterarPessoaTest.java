@@ -13,6 +13,8 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
 import com.diego.prandini.exerciciotecnicoelotech.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,7 @@ public class AlterarPessoaTest {
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
     private static final String EMAIL_DEFAULT = "contato@email.com";
+    private static final String PASSWORD_DEFAULT = "Senha@123";
 
     private CriarPessoa criarPessoa;
     private AlterarPessoa alterarPessoa;
@@ -49,8 +52,9 @@ public class AlterarPessoaTest {
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
+        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
-        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock);
+        criarPessoa = new CriarPessoa(pessoaRepository, applicationClock, passwordEncoder);
         alterarPessoa = new AlterarPessoa(pessoaRepository, applicationClock);
         buscarPessoa = new BuscarPessoa(pessoaRepository);
         idPessoaDefault = criarPessoaDefaultParaAlteracoes();
@@ -224,11 +228,11 @@ public class AlterarPessoaTest {
                 NOME_DEFAULT,
                 "98841337273",
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 List.of(new CriarPessoa.ContatoInput(
                         CONTATO_DEFAULT,
                         TELEFONE_DEFAULT,
                         EMAIL_DEFAULT
-
                 ))
         ));
 
@@ -250,11 +254,11 @@ public class AlterarPessoaTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 List.of(new CriarPessoa.ContatoInput(
                         CONTATO_DEFAULT,
                         TELEFONE_DEFAULT,
                         EMAIL_DEFAULT
-
                 ))
         )).id();
     }

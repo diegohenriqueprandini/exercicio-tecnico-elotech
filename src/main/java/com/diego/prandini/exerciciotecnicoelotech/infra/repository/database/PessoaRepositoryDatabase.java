@@ -4,6 +4,7 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Password;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
@@ -35,6 +36,7 @@ public class PessoaRepositoryDatabase implements PessoaRepository {
                 pessoa.getNome(),
                 pessoa.getCpf().get(),
                 pessoa.getDataDeNascimento().get(),
+                pessoa.getPassword().get(),
                 pessoa.getContatos().stream()
                         .map(item -> new ContatoTable(
                                 item.getId(),
@@ -90,7 +92,8 @@ public class PessoaRepositoryDatabase implements PessoaRepository {
                 pessoaTable.getId(),
                 pessoaTable.getNome(),
                 new Cpf(pessoaTable.getCpf()),
-                new DataDeNascimento(pessoaTable.getDataDeNascimento(), applicationClock)
+                new DataDeNascimento(pessoaTable.getDataDeNascimento(), applicationClock),
+                new Password(pessoaTable.getPassword())
         );
         pessoaTable.getContatos().stream()
                 .map(item -> new Contato(

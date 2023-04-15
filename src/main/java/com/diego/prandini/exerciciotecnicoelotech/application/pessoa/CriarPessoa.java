@@ -3,12 +3,14 @@ package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
+import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Password;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.InputNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,7 @@ public class CriarPessoa {
 
     private final PessoaRepository pessoaRepository;
     private final ApplicationClock applicationClock;
+    private final PasswordEncoder passwordEncoder;
 
     public Output execute(Input input) {
         validarInput(input);
@@ -53,7 +56,8 @@ public class CriarPessoa {
                 UUID.randomUUID(),
                 input.nome,
                 new Cpf(input.cpf),
-                new DataDeNascimento(input.dataDeNascimento, applicationClock)
+                new DataDeNascimento(input.dataDeNascimento, applicationClock),
+                new Password(input.password, passwordEncoder)
         );
     }
 
@@ -81,6 +85,7 @@ public class CriarPessoa {
             String nome,
             String cpf,
             LocalDate dataDeNascimento,
+            String password,
             List<ContatoInput> contatos
     ) {
     }

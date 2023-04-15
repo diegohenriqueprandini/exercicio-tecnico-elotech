@@ -27,6 +27,7 @@ public class RemoverPessoaApiTest {
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
+    private static final String PASSWORD_DEFAULT = "Senha@123";
 
     private static final String CONTATO_DEFAULT = "Contato1";
     private static final String TELEFONE_DEFAULT = "44988776655";
@@ -43,6 +44,7 @@ public class RemoverPessoaApiTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,
                 EMAIL_DEFAULT

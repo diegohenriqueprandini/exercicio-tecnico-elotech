@@ -9,6 +9,7 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.DataDeNascimentoVazi
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.NomeVazioException;
+import com.diego.prandini.exerciciotecnicoelotech.exception.PasswordVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,13 +30,15 @@ public class Pessoa {
     private String nome;
     private Cpf cpf;
     private DataDeNascimento dataDeNascimento;
+    private Password password;
     private final List<Contato> contatos = new ArrayList<>();
 
     private Pessoa(
             UUID id,
             String nome,
             Cpf cpf,
-            DataDeNascimento dataDeNascimento
+            DataDeNascimento dataDeNascimento,
+            Password password
     ) {
         if (id == null)
             throw new IdPessoaNuloException();
@@ -43,6 +46,7 @@ public class Pessoa {
         setNome(nome);
         setCpf(cpf);
         setDataDeNascimento(dataDeNascimento);
+        setPassword(password);
     }
 
     public void setNome(String nome) {
@@ -61,6 +65,12 @@ public class Pessoa {
         if (dataDeNascimento == null)
             throw new DataDeNascimentoVaziaException();
         this.dataDeNascimento = dataDeNascimento;
+    }
+
+    public void setPassword(Password password) {
+        if (password == null)
+            throw new PasswordVazioException();
+        this.password = password;
     }
 
     public void adicionarContato(Contato contato) {
@@ -110,6 +120,7 @@ public class Pessoa {
                 .toList());
     }
 
+
     @RequiredArgsConstructor
     public static class Builder {
 
@@ -117,6 +128,7 @@ public class Pessoa {
         private final String nome;
         private final Cpf cpf;
         private final DataDeNascimento dataDeNascimento;
+        private final Password password;
         private final List<Contato> contatos = new ArrayList<>();
 
         public Builder adicionarContato(Contato contato) {
@@ -130,7 +142,8 @@ public class Pessoa {
                     id,
                     nome,
                     cpf,
-                    dataDeNascimento
+                    dataDeNascimento,
+                    password
             );
             contatos.forEach(pessoa::adicionarContato);
             if (pessoa.getContatos().size() < 1)

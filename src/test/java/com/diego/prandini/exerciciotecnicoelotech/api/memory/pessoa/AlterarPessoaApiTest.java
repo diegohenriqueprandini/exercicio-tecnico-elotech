@@ -26,6 +26,7 @@ public class AlterarPessoaApiTest {
     private static final String NOME_DEFAULT = "Joao";
     private static final String CPF_DEFAULT = "37783132669";
     private static final LocalDate DATA_DE_NASCIMENTO_DEFAULT = LocalDate.of(1991, Month.NOVEMBER, 25);
+    private static final String PASSWORD_DEFAULT = "Senha@123";
 
     private static final String NOVO_NOME_DEFAULT = "Novo Joao";
     private static final String NOVO_CPF_DEFAULT = "25853460218";
@@ -46,6 +47,7 @@ public class AlterarPessoaApiTest {
                 NOME_DEFAULT,
                 CPF_DEFAULT,
                 DATA_DE_NASCIMENTO_DEFAULT,
+                PASSWORD_DEFAULT,
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,
                 EMAIL_DEFAULT
