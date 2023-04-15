@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,20 +38,19 @@ class PessoaTest {
     void deveCriarUmaPessoaComUmContato() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
-        Pessoa.Builder builder = new Pessoa.Builder(
+        Pessoa pessoa = new Pessoa(
                 UUID.randomUUID(),
                 NOME_DEFAULT,
                 new Cpf(CPF_DEFAULT),
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                new Password(PASSWORD_DEFAULT, passwordEncoder)
+                new Password(PASSWORD_DEFAULT, passwordEncoder),
+                List.of(new Contato(
+                        UUID.randomUUID(),
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+                ))
         );
-        builder.adicionarContato(new Contato(
-                UUID.randomUUID(),
-                CONTATO_DEFAULT,
-                TELEFONE_DEFAULT,
-                EMAIL_DEFAULT
-        ));
-        Pessoa pessoa = builder.build();
 
         assertThat(pessoa).isNotNull();
         assertThat(pessoa.getId()).isNotNull();
@@ -70,13 +70,14 @@ class PessoaTest {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
         UUID idPessoa = UUID.randomUUID();
-        Throwable throwable = catchThrowable(() -> new Pessoa.Builder(
+        Throwable throwable = catchThrowable(() -> new Pessoa(
                 idPessoa,
                 NOME_DEFAULT,
                 new Cpf(CPF_DEFAULT),
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                new Password(PASSWORD_DEFAULT, passwordEncoder)
-        ).build());
+                new Password(PASSWORD_DEFAULT, passwordEncoder),
+                List.of()
+        ));
 
         assertThat(throwable).isInstanceOf(ContatosVazioException.class);
         assertThat(throwable.getMessage()).isEqualTo("Deve possuir ao menos um contato");
@@ -87,21 +88,20 @@ class PessoaTest {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
         UUID idPessoa = UUID.randomUUID();
-        Pessoa.Builder builder = new Pessoa.Builder(
+        UUID idContato = UUID.randomUUID();
+        Pessoa pessoa = new Pessoa(
                 idPessoa,
                 NOME_DEFAULT,
                 new Cpf(CPF_DEFAULT),
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                new Password(PASSWORD_DEFAULT, passwordEncoder)
+                new Password(PASSWORD_DEFAULT, passwordEncoder),
+                List.of(new Contato(
+                        idContato,
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+                ))
         );
-        UUID idContato = UUID.randomUUID();
-        builder.adicionarContato(new Contato(
-                idContato,
-                CONTATO_DEFAULT,
-                TELEFONE_DEFAULT,
-                EMAIL_DEFAULT
-        ));
-        Pessoa pessoa = builder.build();
 
         Throwable throwable = catchThrowable(() -> pessoa.removerContato(idContato));
 
@@ -113,57 +113,55 @@ class PessoaTest {
     void deveAlterarUmContato() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
-        Pessoa.Builder builder = new Pessoa.Builder(
+        UUID idContato = UUID.randomUUID();
+        Pessoa pessoa = new Pessoa(
                 UUID.randomUUID(),
                 NOME_DEFAULT,
                 new Cpf(CPF_DEFAULT),
                 new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                new Password(PASSWORD_DEFAULT, passwordEncoder)
+                new Password(PASSWORD_DEFAULT, passwordEncoder),
+                List.of(new Contato(
+                        idContato,
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+                ))
         );
-        UUID idContato = UUID.randomUUID();
-        builder.adicionarContato(new Contato(
-                idContato,
-                CONTATO_DEFAULT,
-                TELEFONE_DEFAULT,
-                EMAIL_DEFAULT
-        ));
-        Pessoa pessoa = builder.build();
-        Contato contato = new Contato(
+        Contato contatoAlterado = new Contato(
                 idContato,
                 "Contato alterado",
                 "44911223344",
                 "email.alterado@email.com"
         );
 
-        pessoa.alterarContato(contato);
+        pessoa.alterarContato(contatoAlterado);
 
-        assertThat(pessoa.getContatos()).isNotNull();
-        assertThat(pessoa.getContatos().size()).isEqualTo(1);
-        assertThat(pessoa.getContatos().get(0)).isNotNull();
-        assertThat(pessoa.getContatos().get(0).getNome()).isEqualTo("Contato alterado");
-        assertThat(pessoa.getContatos().get(0).getTelefone()).isEqualTo("44911223344");
-        assertThat(pessoa.getContatos().get(0).getEmail()).isEqualTo("email.alterado@email.com");
+        assertThat(pessoa.getContatos()).anySatisfy(it -> {
+            assertThat(pessoa.getContatos().get(0)).isNotNull();
+            assertThat(pessoa.getContatos().get(0).getNome()).isEqualTo("Contato alterado");
+            assertThat(pessoa.getContatos().get(0).getTelefone()).isEqualTo("44911223344");
+            assertThat(pessoa.getContatos().get(0).getEmail()).isEqualTo("email.alterado@email.com");
+        });
     }
 
     @Test
     void deveCriarPessoaComSenhaCriptografada() {
         ApplicationClockMock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
-        Pessoa.Builder builder = new Pessoa.Builder(
-                UUID.randomUUID(),
-                NOME_DEFAULT,
-                new Cpf(CPF_DEFAULT),
-                new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                new Password(PASSWORD_DEFAULT, passwordEncoder)
-        );
         Contato contato = new Contato(
                 UUID.randomUUID(),
                 CONTATO_DEFAULT,
                 TELEFONE_DEFAULT,
                 EMAIL_DEFAULT
         );
-        builder.adicionarContato(contato);
-        Pessoa pessoa = builder.build();
+        Pessoa pessoa = new Pessoa(
+                UUID.randomUUID(),
+                NOME_DEFAULT,
+                new Cpf(CPF_DEFAULT),
+                new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
+                new Password(PASSWORD_DEFAULT, passwordEncoder),
+                List.of(contato)
+        );
 
         assertThat(pessoa).satisfies(p -> {
             assertThat(p.getId()).isNotNull();
@@ -180,22 +178,19 @@ class PessoaTest {
     void passwordNaoPodeSerNulo() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
         PasswordEncoder passwordEncoder = new PasswordEncoderNop();
-        Throwable throwable = catchThrowable(() -> {
-            Pessoa.Builder builder = new Pessoa.Builder(
-                    UUID.randomUUID(),
-                    NOME_DEFAULT,
-                    new Cpf(CPF_DEFAULT),
-                    new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
-                    new Password(null, passwordEncoder)
-            );
-            builder.adicionarContato(new Contato(
-                    UUID.randomUUID(),
-                    CONTATO_DEFAULT,
-                    TELEFONE_DEFAULT,
-                    EMAIL_DEFAULT
-            ));
-            builder.build();
-        });
+        Throwable throwable = catchThrowable(() -> new Pessoa(
+                UUID.randomUUID(),
+                NOME_DEFAULT,
+                new Cpf(CPF_DEFAULT),
+                new DataDeNascimento(DATA_DE_NASCIMENTO_DEFAULT, applicationClock),
+                new Password(null, passwordEncoder),
+                List.of(new Contato(
+                        UUID.randomUUID(),
+                        CONTATO_DEFAULT,
+                        TELEFONE_DEFAULT,
+                        EMAIL_DEFAULT
+                ))
+        ));
 
         assertThat(throwable).isInstanceOf(PasswordVazioException.class);
         assertThat(throwable.getMessage()).isEqualTo("Password não pode ser vazio");

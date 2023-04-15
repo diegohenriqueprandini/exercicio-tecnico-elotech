@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -88,20 +89,20 @@ public class PessoaRepositoryDatabase implements PessoaRepository {
     }
 
     private Pessoa toPessoa(PessoaTable pessoaTable) {
-        Pessoa.Builder builder = new Pessoa.Builder(
+        return new Pessoa(
                 pessoaTable.getId(),
                 pessoaTable.getNome(),
                 new Cpf(pessoaTable.getCpf()),
                 new DataDeNascimento(pessoaTable.getDataDeNascimento(), applicationClock),
-                new Password(pessoaTable.getPassword())
+                new Password(pessoaTable.getPassword()),
+                pessoaTable.getContatos().stream()
+                        .map(item -> new Contato(
+                                item.getId(),
+                                item.getNome(),
+                                item.getTelefone(),
+                                item.getEmail()
+                        ))
+                        .collect(Collectors.toList())
         );
-        pessoaTable.getContatos().stream()
-                .map(item -> new Contato(
-                        item.getId(),
-                        item.getNome(),
-                        item.getTelefone(),
-                        item.getEmail()
-                )).forEach(builder::adicionarContato);
-        return builder.build();
     }
 }

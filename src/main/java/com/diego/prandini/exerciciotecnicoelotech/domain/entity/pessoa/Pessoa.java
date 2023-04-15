@@ -13,7 +13,6 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.PasswordVazioExcepti
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -33,12 +32,13 @@ public class Pessoa {
     private Password password;
     private final List<Contato> contatos = new ArrayList<>();
 
-    private Pessoa(
+    public Pessoa(
             UUID id,
             String nome,
             Cpf cpf,
             DataDeNascimento dataDeNascimento,
-            Password password
+            Password password,
+            List<Contato> contatos
     ) {
         if (id == null)
             throw new IdPessoaNuloException();
@@ -47,6 +47,7 @@ public class Pessoa {
         setCpf(cpf);
         setDataDeNascimento(dataDeNascimento);
         setPassword(password);
+        setContatos(contatos);
     }
 
     public void setNome(String nome) {
@@ -73,6 +74,14 @@ public class Pessoa {
         this.password = password;
     }
 
+    private void setContatos(List<Contato> contatos) {
+        if (contatos == null || contatos.isEmpty())
+            throw new ContatosVazioException();
+        contatos.forEach(this::adicionarContato);
+        if (getContatos().size() < 1)
+            throw new ContatosVazioException();
+    }
+
     public void adicionarContato(Contato contato) {
         if (contato == null)
             throw new ContatoNuloException();
@@ -84,10 +93,7 @@ public class Pessoa {
     public void removerContato(UUID idContato) {
         if (idContato == null)
             throw new IdContatoNuloException();
-        Contato contatoFound = this.contatos.stream()
-                .filter(item -> item.getId().equals(idContato))
-                .findFirst()
-                .orElseThrow(() -> new ContatoNotFoundException(idContato));
+        Contato contatoFound = buscarContato(idContato);
         if (this.contatos.size() < 2)
             throw new ContatosVazioException();
         this.contatos.remove(contatoFound);
@@ -96,10 +102,7 @@ public class Pessoa {
     public void alterarContato(Contato contato) {
         if (contato == null)
             throw new ContatoNuloException();
-        Contato toUpdate = this.contatos.stream()
-                .filter(item -> item.getId().equals(contato.getId()))
-                .findFirst()
-                .orElseThrow(() -> new ContatoNotFoundException(contato.getId()));
+        Contato toUpdate = buscarContato(contato.getId());
         toUpdate.setNome(contato.getNome());
         toUpdate.setTelefone(contato.getTelefone());
         toUpdate.setEmail(contato.getEmail());
@@ -118,37 +121,5 @@ public class Pessoa {
         return List.copyOf(contatos.stream()
                 .sorted(Comparator.comparing(Contato::getNome))
                 .toList());
-    }
-
-
-    @RequiredArgsConstructor
-    public static class Builder {
-
-        private final UUID id;
-        private final String nome;
-        private final Cpf cpf;
-        private final DataDeNascimento dataDeNascimento;
-        private final Password password;
-        private final List<Contato> contatos = new ArrayList<>();
-
-        public Builder adicionarContato(Contato contato) {
-            if (!contatos.contains(contato))
-                contatos.add(contato);
-            return this;
-        }
-
-        public Pessoa build() {
-            Pessoa pessoa = new Pessoa(
-                    id,
-                    nome,
-                    cpf,
-                    dataDeNascimento,
-                    password
-            );
-            contatos.forEach(pessoa::adicionarContato);
-            if (pessoa.getContatos().size() < 1)
-                throw new ContatosVazioException();
-            return pessoa;
-        }
     }
 }

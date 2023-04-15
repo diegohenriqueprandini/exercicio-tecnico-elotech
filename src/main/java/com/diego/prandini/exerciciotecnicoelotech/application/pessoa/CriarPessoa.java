@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -30,9 +31,7 @@ public class CriarPessoa {
     public Output execute(Input input) {
         validarInput(input);
         validarCpfUnico(input);
-        Pessoa.Builder builder = criarBuilder(input);
-        adicionarContatos(builder, input.contatos);
-        Pessoa pessoa = builder.build();
+        Pessoa pessoa = criarPessoa(input);
         pessoaRepository.save(pessoa);
         Pessoa pessoaSaved = pessoaRepository.findById(pessoa.getId());
         return toOutput(pessoaSaved);
@@ -51,25 +50,22 @@ public class CriarPessoa {
             throw new CpfJaExisteException(input.cpf);
     }
 
-    private Pessoa.Builder criarBuilder(Input input) {
-        return new Pessoa.Builder(
+    private Pessoa criarPessoa(Input input) {
+        return new Pessoa(
                 UUID.randomUUID(),
                 input.nome,
                 new Cpf(input.cpf),
                 new DataDeNascimento(input.dataDeNascimento, applicationClock),
-                new Password(input.password, passwordEncoder)
+                new Password(input.password, passwordEncoder),
+                input.contatos.stream()
+                        .map(item -> new Contato(
+                                UUID.randomUUID(),
+                                item.nome,
+                                item.telefone,
+                                item.email
+                        ))
+                        .collect(Collectors.toList())
         );
-    }
-
-    private void adicionarContatos(Pessoa.Builder builder, List<ContatoInput> contatosInput) {
-        contatosInput.stream()
-                .map(item -> new Contato(
-                        UUID.randomUUID(),
-                        item.nome,
-                        item.telefone,
-                        item.email
-                ))
-                .forEach(builder::adicionarContato);
     }
 
     private Output toOutput(Pessoa pessoa) {
