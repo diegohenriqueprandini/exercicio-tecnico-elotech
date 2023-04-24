@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.config;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryDatabaseCondition;
+import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryConditionDatabase;
 import com.diego.prandini.exerciciotecnicoelotech.infra.properties.DatabaseProperties;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-@Conditional(RepositoryDatabaseCondition.class)
+@Conditional(RepositoryConditionDatabase.class)
 public class PostgresConfig {
 
     @Bean

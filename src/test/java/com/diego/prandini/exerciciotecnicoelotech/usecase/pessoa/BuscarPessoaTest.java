@@ -1,14 +1,14 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNoOp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +40,7 @@ public class BuscarPessoaTest {
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock, passwordEncoder);
         buscarPessoa = new BuscarPessoa(pessoaRepository);

@@ -1,10 +1,10 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.controller.contato;
 
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.AdicionarContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.AlterarContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.BuscarContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.ListarContatosPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.RemoverContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.AdicionarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.AlterarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.BuscarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.ListarContatosPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.RemoverContatoPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

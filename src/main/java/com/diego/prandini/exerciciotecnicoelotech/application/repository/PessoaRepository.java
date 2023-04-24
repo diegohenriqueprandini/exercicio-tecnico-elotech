@@ -1,7 +1,6 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.repository;
+package com.diego.prandini.exerciciotecnicoelotech.application.repository;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
-import com.diego.prandini.exerciciotecnicoelotech.domain.entity.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 
 import java.util.Optional;

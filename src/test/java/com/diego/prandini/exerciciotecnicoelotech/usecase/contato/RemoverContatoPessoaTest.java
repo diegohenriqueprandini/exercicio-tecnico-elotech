@@ -1,18 +1,18 @@
 package com.diego.prandini.exerciciotecnicoelotech.usecase.contato;
 
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.AdicionarContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.BuscarContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.ListarContatosPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.contato.RemoverContatoPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.AdicionarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.BuscarContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.ListarContatosPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato.RemoverContatoPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatoNotFoundException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.ContatosVazioException;
 import com.diego.prandini.exerciciotecnicoelotech.infra.repository.memory.PessoaRepositoryMemory;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNoOp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +52,7 @@ public class RemoverContatoPessoaTest {
     @BeforeEach
     void setup() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         PessoaRepository pessoaRepository = new PessoaRepositoryMemory();
         listarContatosPessoa = new ListarContatosPessoa(pessoaRepository);
         criarPessoa = new CriarPessoa(pessoaRepository, applicationClock, passwordEncoder);

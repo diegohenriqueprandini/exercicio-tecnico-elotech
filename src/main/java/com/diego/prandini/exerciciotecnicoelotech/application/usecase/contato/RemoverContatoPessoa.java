@@ -1,7 +1,7 @@
-package com.diego.prandini.exerciciotecnicoelotech.application.contato;
+package com.diego.prandini.exerciciotecnicoelotech.application.usecase.contato;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdContatoNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import lombok.RequiredArgsConstructor;

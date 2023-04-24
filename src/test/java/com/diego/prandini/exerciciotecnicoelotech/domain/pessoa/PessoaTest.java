@@ -10,7 +10,7 @@ import com.diego.prandini.exerciciotecnicoelotech.exception.PasswordVazioExcepti
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClockMock;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoder;
-import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNop;
+import com.diego.prandini.exerciciotecnicoelotech.infra.system.security.PasswordEncoderNoOp;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ class PessoaTest {
     @Test
     void deveCriarUmaPessoaComUmContato() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         Pessoa pessoa = new Pessoa(
                 UUID.randomUUID(),
                 NOME_DEFAULT,
@@ -68,7 +68,7 @@ class PessoaTest {
     @Test
     void pessoaDeveTerPeloMenosUmContato() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         UUID idPessoa = UUID.randomUUID();
         Throwable throwable = catchThrowable(() -> new Pessoa(
                 idPessoa,
@@ -86,7 +86,7 @@ class PessoaTest {
     @Test
     void naoPodeRemoverTodosOsContatosDaPessoa() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         UUID idPessoa = UUID.randomUUID();
         UUID idContato = UUID.randomUUID();
         Pessoa pessoa = new Pessoa(
@@ -112,7 +112,7 @@ class PessoaTest {
     @Test
     void deveAlterarUmContato() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         UUID idContato = UUID.randomUUID();
         Pessoa pessoa = new Pessoa(
                 UUID.randomUUID(),
@@ -147,7 +147,7 @@ class PessoaTest {
     @Test
     void deveCriarPessoaComSenhaCriptografada() {
         ApplicationClockMock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         Contato contato = new Contato(
                 UUID.randomUUID(),
                 CONTATO_DEFAULT,
@@ -177,7 +177,7 @@ class PessoaTest {
     @Test
     void passwordNaoPodeSerNulo() {
         ApplicationClock applicationClock = new ApplicationClockMock(TODAY_MOCK);
-        PasswordEncoder passwordEncoder = new PasswordEncoderNop();
+        PasswordEncoder passwordEncoder = new PasswordEncoderNoOp();
         Throwable throwable = catchThrowable(() -> new Pessoa(
                 UUID.randomUUID(),
                 NOME_DEFAULT,

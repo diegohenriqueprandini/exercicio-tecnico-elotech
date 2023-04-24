@@ -1,9 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.MockMvcHandler;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.AlterarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.AlterarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.CriarPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.infra.controller.ControllerErrorData;
 import com.diego.prandini.exerciciotecnicoelotech.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;

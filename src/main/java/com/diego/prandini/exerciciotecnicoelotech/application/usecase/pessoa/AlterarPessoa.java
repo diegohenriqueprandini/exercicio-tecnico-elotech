@@ -1,9 +1,9 @@
-package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Cpf;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.DataDeNascimento;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.CpfJaExisteException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import com.diego.prandini.exerciciotecnicoelotech.exception.InputNuloException;

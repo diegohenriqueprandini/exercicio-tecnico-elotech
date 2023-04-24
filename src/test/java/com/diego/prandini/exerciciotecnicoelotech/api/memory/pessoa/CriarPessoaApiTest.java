@@ -1,8 +1,8 @@
 package com.diego.prandini.exerciciotecnicoelotech.api.memory.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.CriarPessoa;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

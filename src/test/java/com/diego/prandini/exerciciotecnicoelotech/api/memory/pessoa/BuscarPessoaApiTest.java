@@ -1,7 +1,7 @@
 package com.diego.prandini.exerciciotecnicoelotech.api.memory.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.api.support.pessoa.MockMvcPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.BuscarPessoa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

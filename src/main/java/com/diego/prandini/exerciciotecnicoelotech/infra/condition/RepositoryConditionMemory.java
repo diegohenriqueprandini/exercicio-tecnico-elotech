@@ -4,9 +4,9 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-public class RepositoryDatabaseCondition implements Condition {
+public class RepositoryConditionMemory implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        return "database".equals(context.getEnvironment().getProperty("application.inject.repository"));
+        return "memory".equals(context.getEnvironment().getProperty("application.inject.repository"));
     }
 }

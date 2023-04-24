@@ -1,7 +1,7 @@
-package com.diego.prandini.exerciciotecnicoelotech.application.pessoa;
+package com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa;
 
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
-import com.diego.prandini.exerciciotecnicoelotech.domain.repository.PessoaRepository;
+import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.IdPessoaNuloException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

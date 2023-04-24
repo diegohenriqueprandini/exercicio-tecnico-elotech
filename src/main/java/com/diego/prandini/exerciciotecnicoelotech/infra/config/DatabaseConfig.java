@@ -1,6 +1,6 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.config;
 
-import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryDatabaseCondition;
+import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryConditionDatabase;
 import com.diego.prandini.exerciciotecnicoelotech.infra.properties.DatabaseProperties;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-@Conditional(RepositoryDatabaseCondition.class)
+@Conditional(RepositoryConditionDatabase.class)
 public class DatabaseConfig {
 
     @Bean

@@ -1,10 +1,10 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.controller.pessoa;
 
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.AlterarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.BuscarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.CriarPessoa;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.ListarPessoas;
-import com.diego.prandini.exerciciotecnicoelotech.application.pessoa.RemoverPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.AlterarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.BuscarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.CriarPessoa;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.ListarPessoas;
+import com.diego.prandini.exerciciotecnicoelotech.application.usecase.pessoa.RemoverPessoa;
 import com.diego.prandini.exerciciotecnicoelotech.utils.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

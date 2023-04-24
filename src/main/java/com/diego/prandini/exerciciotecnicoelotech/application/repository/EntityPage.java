@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.domain.entity;
+package com.diego.prandini.exerciciotecnicoelotech.application.repository;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

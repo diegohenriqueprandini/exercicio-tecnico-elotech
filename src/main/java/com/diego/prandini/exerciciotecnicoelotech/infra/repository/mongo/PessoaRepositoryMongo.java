@@ -1,4 +1,4 @@
-package com.diego.prandini.exerciciotecnicoelotech.infra.repository.database;
+package com.diego.prandini.exerciciotecnicoelotech.infra.repository.mongo;
 
 import com.diego.prandini.exerciciotecnicoelotech.application.repository.EntityPage;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.contato.Contato;
@@ -8,7 +8,9 @@ import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Password;
 import com.diego.prandini.exerciciotecnicoelotech.domain.entity.pessoa.Pessoa;
 import com.diego.prandini.exerciciotecnicoelotech.application.repository.PessoaRepository;
 import com.diego.prandini.exerciciotecnicoelotech.exception.PessoaNotFoundException;
-import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryConditionDatabase;
+import com.diego.prandini.exerciciotecnicoelotech.infra.condition.RepositoryConditionMongo;
+import com.diego.prandini.exerciciotecnicoelotech.infra.repository.database.ContatoTable;
+import com.diego.prandini.exerciciotecnicoelotech.infra.repository.database.PessoaTable;
 import com.diego.prandini.exerciciotecnicoelotech.infra.system.clock.ApplicationClock;
 import com.diego.prandini.exerciciotecnicoelotech.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,10 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-@Conditional(RepositoryConditionDatabase.class)
-public class PessoaRepositoryDatabase implements PessoaRepository {
+@Conditional(RepositoryConditionMongo.class)
+public class PessoaRepositoryMongo implements PessoaRepository {
 
-    private final PessoaJpaRepository pessoaJpaRepository;
+    private final PessoaMongoRepository pessoaJpaRepository;
     private final ApplicationClock applicationClock;
 
     @Override

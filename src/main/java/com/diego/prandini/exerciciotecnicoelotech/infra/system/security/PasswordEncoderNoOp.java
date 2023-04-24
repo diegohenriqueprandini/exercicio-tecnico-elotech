@@ -1,6 +1,9 @@
 package com.diego.prandini.exerciciotecnicoelotech.infra.system.security;
 
-public class PasswordEncoderNop implements PasswordEncoder {
+import org.springframework.stereotype.Component;
+
+@Component
+public class PasswordEncoderNoOp implements PasswordEncoder {
     @Override
     public String encode(String password) {
         return "encrypted: " + password;
